@@ -74,6 +74,7 @@ class Product(BaseModel):
     description: str
     benefits: List[str] = []
     features: List[str] = ["Healthy Heart", "High Nutrition", "Gluten Free", "Cholesterol Free"]
+    priceVariants: dict = {}  # e.g., {"100g": 145, "250g": 350, "500g": 650, "1kg": 1200}
 
 class ProductCreate(BaseModel):
     name: str
@@ -88,6 +89,7 @@ class ProductCreate(BaseModel):
     description: str
     benefits: List[str] = []
     features: List[str] = ["Healthy Heart", "High Nutrition", "Gluten Free", "Cholesterol Free"]
+    priceVariants: dict = {}
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
@@ -102,6 +104,7 @@ class ProductUpdate(BaseModel):
     description: Optional[str] = None
     benefits: Optional[List[str]] = None
     features: Optional[List[str]] = None
+    priceVariants: Optional[dict] = None
 
 # Hero Slide Models
 class HeroSlide(BaseModel):
