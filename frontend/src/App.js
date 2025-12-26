@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DataProvider } from "./context/DataContext";
+import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import ProductList from "./pages/ProductList";
 import ProductPage from "./pages/ProductPage";
@@ -19,6 +20,7 @@ function App() {
     <DataProvider>
       <div className="App">
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
