@@ -182,6 +182,15 @@ class SiteSettings(BaseModel):
     instagramLink: str = ""
     twitterLink: str = ""
     youtubeLink: str = ""
+    bulkOrderProductTypes: List[str] = ["Dry Fruits", "Nuts", "Seeds", "Berries", "Gift Boxes", "Mixed Products"]
+    bulkOrderBenefits: List[str] = [
+        "Direct sourcing from farms ensures freshness",
+        "Minimum order quantity: 10 kg",
+        "Special rates for orders above 100 kg",
+        "Custom packaging with your branding",
+        "Regular supply contracts available",
+        "Quality testing certificates provided"
+    ]
 
 class SiteSettingsUpdate(BaseModel):
     businessName: Optional[str] = None
@@ -196,6 +205,8 @@ class SiteSettingsUpdate(BaseModel):
     instagramLink: Optional[str] = None
     twitterLink: Optional[str] = None
     youtubeLink: Optional[str] = None
+    bulkOrderProductTypes: Optional[List[str]] = None
+    bulkOrderBenefits: Optional[List[str]] = None
 
 # Form Submission Models
 class BulkOrderSubmission(BaseModel):
