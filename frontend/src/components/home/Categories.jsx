@@ -1,8 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { categories } from '../../data/mock';
+import { useData } from '../../context/DataContext';
 
 const Categories = () => {
+  const { categories } = useData();
+
+  if (categories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-12 bg-white">
       <div className="max-w-5xl mx-auto px-4">

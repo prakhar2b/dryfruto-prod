@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { heroSlides } from '../../data/mock';
+import { useData } from '../../context/DataContext';
 
 const HeroSlider = () => {
+  const { heroSlides } = useData();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
+    if (heroSlides.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [heroSlides.length]);
+
+  if (heroSlides.length === 0) {
+    return (
+      <section className="h-[500px] md:h-[600px] bg-gradient-to-r from-amber-800 to-amber-900 flex items-center justify-center">
+        <div className="text-center text-white">
+          <h1 className="text-4xl font-bold mb-4">Welcome to DryFruto</h1>
+          <p className="text-amber-200">Premium Dry Fruits & Nuts</p>
+        </div>
+      </section>
+    );
+  }
 
   const goToSlide = (index) => {
     setCurrentSlide(index);

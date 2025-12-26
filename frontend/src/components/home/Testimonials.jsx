@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import { testimonials } from '../../data/mock';
+import { useData } from '../../context/DataContext';
 
 const Testimonials = () => {
+  const { testimonials } = useData();
   const scrollRef = useRef(null);
 
   const scroll = (direction) => {
@@ -14,6 +15,10 @@ const Testimonials = () => {
       });
     }
   };
+
+  if (testimonials.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-16 bg-gradient-to-br from-amber-800 to-amber-950 relative overflow-hidden">

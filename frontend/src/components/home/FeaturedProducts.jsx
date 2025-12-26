@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { products } from '../../data/mock';
+import { useData } from '../../context/DataContext';
 
 const FeaturedProducts = () => {
+  const { products } = useData();
   const scrollRef = useRef(null);
 
   const scroll = (direction) => {
@@ -17,6 +18,10 @@ const FeaturedProducts = () => {
   };
 
   const featuredProducts = products.slice(0, 8);
+
+  if (featuredProducts.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-16 bg-white">

@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { giftBoxes } from '../../data/mock';
+import { useData } from '../../context/DataContext';
 
 const GiftBoxes = () => {
+  const { giftBoxes } = useData();
   const scrollRef = useRef(null);
 
   const scroll = (direction) => {
@@ -15,6 +16,10 @@ const GiftBoxes = () => {
       });
     }
   };
+
+  if (giftBoxes.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-16 bg-[#fdf8f3]">
