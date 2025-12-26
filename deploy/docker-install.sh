@@ -76,7 +76,7 @@ EOF
 echo -e "${YELLOW}Building frontend...${NC}"
 cd frontend
 echo "REACT_APP_BACKEND_URL=http://${DOMAIN}" > .env
-npm install 2>/dev/null || (apt install -y nodejs npm && npm install)
+npm install --legacy-peer-deps 2>/dev/null || (apt install -y nodejs npm && npm install --legacy-peer-deps)
 npm run build
 cd ..
 
