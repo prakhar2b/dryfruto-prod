@@ -96,9 +96,9 @@ export const products = [
     category: "nuts-dry-fruits",
     type: "Cashews",
     basePrice: 185,
-    image: "https://images.pexels.com/photos/4033320/pexels-photo-4033320.jpeg?auto=compress&cs=tinysrgb&w=500",
+    image: "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=500",
     images: [
-      "https://images.pexels.com/photos/4033320/pexels-photo-4033320.jpeg?auto=compress&cs=tinysrgb&w=500"
+      "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=500"
     ],
     sku: "DRF002",
     shortDescription: "Large, creamy jumbo cashews with a rich buttery taste.",
