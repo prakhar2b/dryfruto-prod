@@ -139,13 +139,13 @@ const Header = () => {
                 >
                   Career
                 </Link>
-                <a 
-                  href="#about" 
+                <Link 
+                  to="/about" 
                   className="text-white hover:text-amber-300 py-2 border-t border-amber-900 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   About Us
-                </a>
+                </Link>
                 <a 
                   href="#contact" 
                   className="text-white hover:text-amber-300 py-2 transition-colors"
