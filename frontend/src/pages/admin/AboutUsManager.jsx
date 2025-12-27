@@ -105,8 +105,8 @@ const AboutUsManager = () => {
       {/* Hero Section */}
       <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
         <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <span className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-            <Type className="w-4 h-4 text-amber-600" />
+          <span className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+            <Type className="w-4 h-4 text-emerald-600" />
           </span>
           Hero Section
         </h2>
@@ -115,7 +115,7 @@ const AboutUsManager = () => {
           <textarea
             value={settings.aboutHeroSubtitle || ''}
             onChange={(e) => setSettings({ ...settings, aboutHeroSubtitle: e.target.value })}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
             rows="2"
             placeholder="Your trusted partner for premium quality dry fruits..."
           />
@@ -150,7 +150,7 @@ const AboutUsManager = () => {
                 <textarea
                   value={paragraph}
                   onChange={(e) => updateArrayItem('aboutStoryParagraphs', index, e.target.value)}
-                  className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                  className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
                   rows="2"
                 />
                 <button
@@ -166,13 +166,13 @@ const AboutUsManager = () => {
             <textarea
               value={newStoryParagraph}
               onChange={(e) => setNewStoryParagraph(e.target.value)}
-              className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               rows="2"
               placeholder="Add a new paragraph..."
             />
             <button
               onClick={() => addToArray('aboutStoryParagraphs', newStoryParagraph, () => setNewStoryParagraph(''))}
-              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg flex items-center gap-2 h-fit"
+              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg flex items-center gap-2 h-fit"
             >
               <Plus className="w-4 h-4" />
               Add
@@ -201,13 +201,13 @@ const AboutUsManager = () => {
               <input
                 value={stat.number}
                 onChange={(e) => updateArrayItem('aboutStats', index, { ...stat, number: e.target.value })}
-                className="w-full text-2xl font-bold text-amber-600 bg-transparent border-b border-gray-300 focus:border-amber-500 outline-none text-center mb-1"
+                className="w-full text-2xl font-bold text-emerald-600 bg-transparent border-b border-gray-300 focus:border-emerald-500 outline-none text-center mb-1"
                 placeholder="10+"
               />
               <input
                 value={stat.label}
                 onChange={(e) => updateArrayItem('aboutStats', index, { ...stat, label: e.target.value })}
-                className="w-full text-xs text-gray-600 bg-transparent border-b border-gray-300 focus:border-amber-500 outline-none text-center"
+                className="w-full text-xs text-gray-600 bg-transparent border-b border-gray-300 focus:border-emerald-500 outline-none text-center"
                 placeholder="Years Experience"
               />
             </div>
@@ -219,7 +219,7 @@ const AboutUsManager = () => {
             <input
               value={newStat.number}
               onChange={(e) => setNewStat({ ...newStat, number: e.target.value })}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="50K+"
             />
           </div>
@@ -228,13 +228,13 @@ const AboutUsManager = () => {
             <input
               value={newStat.label}
               onChange={(e) => setNewStat({ ...newStat, label: e.target.value })}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="Happy Customers"
             />
           </div>
           <button
             onClick={() => addToArray('aboutStats', newStat, () => setNewStat({ number: '', label: '' }))}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg flex items-center gap-2"
+            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Add
@@ -257,7 +257,7 @@ const AboutUsManager = () => {
             <textarea
               value={settings.aboutVision || ''}
               onChange={(e) => setSettings({ ...settings, aboutVision: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               rows="3"
             />
           </div>
@@ -266,7 +266,7 @@ const AboutUsManager = () => {
             <div className="space-y-2 mb-3">
               {(settings.aboutVisionPoints || []).map((point, index) => (
                 <div key={index} className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
-                  <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
                   <input
                     value={point}
                     onChange={(e) => updateArrayItem('aboutVisionPoints', index, e.target.value)}
@@ -283,12 +283,12 @@ const AboutUsManager = () => {
                 value={newVisionPoint}
                 onChange={(e) => setNewVisionPoint(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && addToArray('aboutVisionPoints', newVisionPoint, () => setNewVisionPoint(''))}
-                className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
                 placeholder="Add vision point..."
               />
               <button
                 onClick={() => addToArray('aboutVisionPoints', newVisionPoint, () => setNewVisionPoint(''))}
-                className="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg"
+                className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -309,7 +309,7 @@ const AboutUsManager = () => {
             <textarea
               value={settings.aboutMission || ''}
               onChange={(e) => setSettings({ ...settings, aboutMission: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               rows="3"
             />
           </div>
@@ -318,7 +318,7 @@ const AboutUsManager = () => {
             <div className="space-y-2 mb-3">
               {(settings.aboutMissionPoints || []).map((point, index) => (
                 <div key={index} className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
-                  <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
                   <input
                     value={point}
                     onChange={(e) => updateArrayItem('aboutMissionPoints', index, e.target.value)}
@@ -335,12 +335,12 @@ const AboutUsManager = () => {
                 value={newMissionPoint}
                 onChange={(e) => setNewMissionPoint(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && addToArray('aboutMissionPoints', newMissionPoint, () => setNewMissionPoint(''))}
-                className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
                 placeholder="Add mission point..."
               />
               <button
                 onClick={() => addToArray('aboutMissionPoints', newMissionPoint, () => setNewMissionPoint(''))}
-                className="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg"
+                className="px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -369,13 +369,13 @@ const AboutUsManager = () => {
               <input
                 value={value.title}
                 onChange={(e) => updateArrayItem('aboutValues', index, { ...value, title: e.target.value })}
-                className="w-full font-semibold text-gray-800 bg-transparent border-b border-gray-300 focus:border-amber-500 outline-none mb-2"
+                className="w-full font-semibold text-gray-800 bg-transparent border-b border-gray-300 focus:border-emerald-500 outline-none mb-2"
                 placeholder="Value Title"
               />
               <textarea
                 value={value.desc}
                 onChange={(e) => updateArrayItem('aboutValues', index, { ...value, desc: e.target.value })}
-                className="w-full text-sm text-gray-600 bg-transparent border-b border-gray-300 focus:border-amber-500 outline-none"
+                className="w-full text-sm text-gray-600 bg-transparent border-b border-gray-300 focus:border-emerald-500 outline-none"
                 rows="2"
                 placeholder="Value description..."
               />
@@ -388,7 +388,7 @@ const AboutUsManager = () => {
             <input
               value={newValue.title}
               onChange={(e) => setNewValue({ ...newValue, title: e.target.value })}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="Quality First"
             />
           </div>
@@ -397,13 +397,13 @@ const AboutUsManager = () => {
             <input
               value={newValue.desc}
               onChange={(e) => setNewValue({ ...newValue, desc: e.target.value })}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="We source only the finest..."
             />
           </div>
           <button
             onClick={() => addToArray('aboutValues', newValue, () => setNewValue({ title: '', desc: '' }))}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg flex items-center gap-2"
+            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Add
@@ -426,13 +426,13 @@ const AboutUsManager = () => {
                 <input
                   value={item.name}
                   onChange={(e) => updateArrayItem('aboutWhyChooseUs', index, { ...item, name: e.target.value })}
-                  className="px-3 py-2 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none font-medium"
+                  className="px-3 py-2 bg-white border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
                   placeholder="Feature Name"
                 />
                 <input
                   value={item.desc}
                   onChange={(e) => updateArrayItem('aboutWhyChooseUs', index, { ...item, desc: e.target.value })}
-                  className="px-3 py-2 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                  className="px-3 py-2 bg-white border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
                   placeholder="Feature description..."
                 />
               </div>
@@ -451,7 +451,7 @@ const AboutUsManager = () => {
             <input
               value={newWhyChoose.name}
               onChange={(e) => setNewWhyChoose({ ...newWhyChoose, name: e.target.value })}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="Quality Assurance"
             />
           </div>
@@ -460,13 +460,13 @@ const AboutUsManager = () => {
             <input
               value={newWhyChoose.desc}
               onChange={(e) => setNewWhyChoose({ ...newWhyChoose, desc: e.target.value })}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="Every product goes through strict quality checks..."
             />
           </div>
           <button
             onClick={() => addToArray('aboutWhyChooseUs', newWhyChoose, () => setNewWhyChoose({ name: '', desc: '' }))}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg flex items-center gap-2"
+            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Add
@@ -479,7 +479,7 @@ const AboutUsManager = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50"
         >
           <Save className="w-5 h-5" />
           {saving ? 'Saving...' : 'Save About Us Settings'}

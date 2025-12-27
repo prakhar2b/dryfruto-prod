@@ -24,16 +24,16 @@ const AdminLayout = () => {
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-[#2d1810] text-white transition-all duration-300 flex flex-col`}>
-        <div className="p-4 border-b border-amber-900 flex items-center justify-between">
+        <div className="p-4 border-b border-emerald-900 flex items-center justify-between">
           {sidebarOpen && (
             <div>
-              <h1 className="text-xl font-bold text-amber-400">DryFruto</h1>
-              <p className="text-xs text-amber-200">Admin Panel</p>
+              <h1 className="text-xl font-bold text-emerald-400">DryFruto</h1>
+              <p className="text-xs text-emerald-200">Admin Panel</p>
             </div>
           )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-amber-900 rounded-lg transition-colors"
+            className="p-2 hover:bg-emerald-900 rounded-lg transition-colors"
           >
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -47,8 +47,8 @@ const AdminLayout = () => {
                   to={item.path}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     isActive(item.path)
-                      ? 'bg-amber-600 text-white'
-                      : 'text-amber-100 hover:bg-amber-900'
+                      ? 'bg-emerald-600 text-white'
+                      : 'text-emerald-100 hover:bg-emerald-900'
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -59,12 +59,12 @@ const AdminLayout = () => {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-amber-900">
+        <div className="p-4 border-t border-emerald-900">
           <a
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-amber-100 hover:bg-amber-900 transition-colors"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-emerald-100 hover:bg-emerald-900 transition-colors"
           >
             <Home className="w-5 h-5" />
             {sidebarOpen && <span>Visit Website</span>}

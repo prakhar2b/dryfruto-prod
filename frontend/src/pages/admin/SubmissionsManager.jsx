@@ -129,7 +129,7 @@ const SubmissionsManager = () => {
           onClick={() => setActiveTab('bulk')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === 'bulk' 
-              ? 'bg-amber-500 text-white' 
+              ? 'bg-emerald-500 text-white' 
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
@@ -140,7 +140,7 @@ const SubmissionsManager = () => {
           onClick={() => setActiveTab('newsletter')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === 'newsletter' 
-              ? 'bg-amber-500 text-white' 
+              ? 'bg-emerald-500 text-white' 
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
@@ -159,7 +159,7 @@ const SubmissionsManager = () => {
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
             />
           </div>
         </div>

@@ -81,8 +81,8 @@ const SettingsManager = () => {
       {/* Business Information */}
       <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
         <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-          <span className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-            <span className="text-amber-600 font-bold">B</span>
+          <span className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+            <span className="text-emerald-600 font-bold">B</span>
           </span>
           Business Information
         </h2>
@@ -93,7 +93,7 @@ const SettingsManager = () => {
               type="text"
               value={settings.businessName}
               onChange={(e) => setSettings({ ...settings, businessName: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
             />
           </div>
 
@@ -103,7 +103,7 @@ const SettingsManager = () => {
               type="text"
               value={settings.slogan}
               onChange={(e) => setSettings({ ...settings, slogan: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
             />
           </div>
 
@@ -133,7 +133,7 @@ const SettingsManager = () => {
               type="text"
               value={settings.phone}
               onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="9870990795"
             />
           </div>
@@ -144,7 +144,7 @@ const SettingsManager = () => {
               type="email"
               value={settings.email}
               onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="info@dryfruto.com"
             />
           </div>
@@ -158,7 +158,7 @@ const SettingsManager = () => {
               type="email"
               value={settings.careerEmail || ''}
               onChange={(e) => setSettings({ ...settings, careerEmail: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="careers@dryfruto.com"
             />
             <p className="text-xs text-gray-500 mt-1">Email for job applications on Career page</p>
@@ -169,7 +169,7 @@ const SettingsManager = () => {
             <textarea
               value={settings.address}
               onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               rows="2"
               placeholder="123, Main Street, New Delhi, India"
             />
@@ -184,7 +184,7 @@ const SettingsManager = () => {
               type="text"
               value={settings.whatsappLink}
               onChange={(e) => setSettings({ ...settings, whatsappLink: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="https://wa.me/919870990795"
             />
             <p className="text-xs text-gray-500 mt-1">Format: https://wa.me/91XXXXXXXXXX (include country code)</p>
@@ -210,7 +210,7 @@ const SettingsManager = () => {
               type="text"
               value={settings.facebookLink || ''}
               onChange={(e) => setSettings({ ...settings, facebookLink: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="https://facebook.com/yourpage"
             />
           </div>
@@ -224,7 +224,7 @@ const SettingsManager = () => {
               type="text"
               value={settings.instagramLink || ''}
               onChange={(e) => setSettings({ ...settings, instagramLink: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="https://instagram.com/yourprofile"
             />
           </div>
@@ -238,7 +238,7 @@ const SettingsManager = () => {
               type="text"
               value={settings.twitterLink || ''}
               onChange={(e) => setSettings({ ...settings, twitterLink: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="https://twitter.com/yourhandle"
             />
           </div>
@@ -252,7 +252,7 @@ const SettingsManager = () => {
               type="text"
               value={settings.youtubeLink || ''}
               onChange={(e) => setSettings({ ...settings, youtubeLink: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="https://youtube.com/@yourchannel"
             />
           </div>
@@ -273,7 +273,7 @@ const SettingsManager = () => {
           <label className="block text-sm font-medium text-gray-700 mb-2">Product Types (for dropdown)</label>
           <div className="flex flex-wrap gap-2 mb-3">
             {(settings.bulkOrderProductTypes || []).map((type, index) => (
-              <span key={index} className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm">
+              <span key={index} className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm">
                 {type}
                 <button
                   type="button"
@@ -282,7 +282,7 @@ const SettingsManager = () => {
                     updated.splice(index, 1);
                     setSettings({ ...settings, bulkOrderProductTypes: updated });
                   }}
-                  className="ml-1 text-amber-600 hover:text-amber-800"
+                  className="ml-1 text-emerald-600 hover:text-emerald-800"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -304,7 +304,7 @@ const SettingsManager = () => {
                   setNewProductType('');
                 }
               }}
-              className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="Add new product type..."
             />
             <button
@@ -318,7 +318,7 @@ const SettingsManager = () => {
                   setNewProductType('');
                 }
               }}
-              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg flex items-center gap-2"
+              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Add
@@ -362,7 +362,7 @@ const SettingsManager = () => {
                   setNewBenefit('');
                 }
               }}
-              className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+              className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="Add new benefit..."
             />
             <button
@@ -376,7 +376,7 @@ const SettingsManager = () => {
                   setNewBenefit('');
                 }
               }}
-              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg flex items-center gap-2"
+              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Add
@@ -389,7 +389,7 @@ const SettingsManager = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50"
         >
           <Save className="w-5 h-5" />
           {saving ? 'Saving...' : 'Save Settings'}

@@ -126,7 +126,7 @@ const FrontendManager = () => {
         </div>
         <button
           onClick={() => { setEditItem(null); setShowModal(true); }}
-          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors"
+          className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors"
         >
           <Plus className="w-5 h-5" />
           Add New
@@ -142,7 +142,7 @@ const FrontendManager = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-4 font-medium transition-colors ${
                 activeTab === tab.id
-                  ? 'text-amber-600 border-b-2 border-amber-500'
+                  ? 'text-emerald-600 border-b-2 border-emerald-500'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -265,7 +265,7 @@ const GiftBoxesList = ({ data, onEdit, onDelete }) => (
           <img src={box.image} alt={box.name} className="w-full h-32 object-cover" />
           <div className="p-3">
             <h3 className="font-semibold text-gray-800">{box.name}</h3>
-            <p className="text-amber-600 font-bold">₹{box.price}</p>
+            <p className="text-emerald-600 font-bold">₹{box.price}</p>
             <div className="flex gap-2 mt-2">
               <button onClick={() => onEdit(box)} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
                 <Edit2 className="w-4 h-4" />
@@ -294,26 +294,26 @@ const HeroSlideForm = ({ item, onSave, onClose }) => {
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-          <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
-          <input type="text" value={form.subtitle} onChange={(e) => setForm({ ...form, subtitle: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.subtitle} onChange={(e) => setForm({ ...form, subtitle: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" rows="3" />
+          <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows="3" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-          <input type="text" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           {form.image && <img src={form.image} alt="Preview" className="mt-2 h-32 object-cover rounded-lg" />}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">CTA Button Text</label>
-          <input type="text" value={form.cta} onChange={(e) => setForm({ ...form, cta: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.cta} onChange={(e) => setForm({ ...form, cta: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
-        <button onClick={() => onSave(form)} className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
+        <button onClick={() => onSave(form)} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
           <Save className="w-5 h-5" /> Save
         </button>
       </div>
@@ -333,22 +333,22 @@ const CategoryForm = ({ item, onSave, onClose }) => {
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-          <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-          <input type="text" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-          <input type="text" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           {form.image && <img src={form.image} alt="Preview" className="mt-2 h-32 object-cover rounded-lg" />}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Icon URL</label>
-          <input type="text" value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
-        <button onClick={() => onSave(form)} className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
+        <button onClick={() => onSave(form)} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
           <Save className="w-5 h-5" /> Save
         </button>
       </div>
@@ -368,18 +368,18 @@ const TestimonialForm = ({ item, onSave, onClose }) => {
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
-          <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Review</label>
-          <textarea value={form.review} onChange={(e) => setForm({ ...form, review: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" rows="4" />
+          <textarea value={form.review} onChange={(e) => setForm({ ...form, review: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows="4" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Avatar URL</label>
-          <input type="text" value={form.avatar} onChange={(e) => setForm({ ...form, avatar: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.avatar} onChange={(e) => setForm({ ...form, avatar: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           {form.avatar && <img src={form.avatar} alt="Preview" className="mt-2 w-16 h-16 object-cover rounded-full" />}
         </div>
-        <button onClick={() => onSave(form)} className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
+        <button onClick={() => onSave(form)} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
           <Save className="w-5 h-5" /> Save
         </button>
       </div>
@@ -399,18 +399,18 @@ const GiftBoxForm = ({ item, onSave, onClose }) => {
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-          <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
-          <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-          <input type="text" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none" />
+          <input type="text" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           {form.image && <img src={form.image} alt="Preview" className="mt-2 h-32 object-cover rounded-lg" />}
         </div>
-        <button onClick={() => onSave(form)} className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
+        <button onClick={() => onSave(form)} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
           <Save className="w-5 h-5" /> Save
         </button>
       </div>

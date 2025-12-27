@@ -94,7 +94,7 @@ const Dashboard = () => {
           <button
             onClick={seedData}
             disabled={loading}
-            className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
           >
             <TrendingUp className="w-5 h-5" />
             Seed Initial Data
