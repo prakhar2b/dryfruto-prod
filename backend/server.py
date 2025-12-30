@@ -25,6 +25,98 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# ============== DEFAULT DATA (Hardcoded) ==============
+
+LOGO_URL = "https://customer-assets.emergentagent.com/job_70b8c44d-b0eb-46ab-b798-c90870274405/artifacts/5olvlaa7_WhatsApp%20Image%202025-12-26%20at%2013.46.33.jpeg"
+
+DEFAULT_SITE_SETTINGS = {
+    "id": "site_settings",
+    "businessName": "DryFruto",
+    "slogan": "Live With Health",
+    "logo": LOGO_URL,
+    "phone": "9870990795",
+    "email": "info@dryfruto.com",
+    "address": "123, Main Street, New Delhi, India",
+    "whatsappLink": "https://wa.me/919870990795",
+    "facebookLink": "",
+    "instagramLink": "",
+    "twitterLink": "",
+    "youtubeLink": ""
+}
+
+def get_default_categories():
+    return [
+        {"id": str(uuid.uuid4()), "name": "Nuts & Dry Fruits", "slug": "nuts-dry-fruits", "image": "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=600", "icon": "https://images.pexels.com/photos/1013420/pexels-photo-1013420.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Dates", "slug": "dates", "image": "https://images.pexels.com/photos/5945755/pexels-photo-5945755.jpeg?auto=compress&cs=tinysrgb&w=600", "icon": "https://images.pexels.com/photos/5945755/pexels-photo-5945755.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Mix Dry Fruits", "slug": "mix-dry-fruits", "image": "https://images.pexels.com/photos/86649/pexels-photo-86649.jpeg?auto=compress&cs=tinysrgb&w=600", "icon": "https://images.pexels.com/photos/86649/pexels-photo-86649.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Makhana", "slug": "makhana", "image": "https://images.pexels.com/photos/7446005/pexels-photo-7446005.jpeg?auto=compress&cs=tinysrgb&w=600", "icon": "https://images.pexels.com/photos/7446005/pexels-photo-7446005.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Seeds", "slug": "seeds", "image": "https://images.pexels.com/photos/4750274/pexels-photo-4750274.jpeg?auto=compress&cs=tinysrgb&w=600", "icon": "https://images.pexels.com/photos/4750274/pexels-photo-4750274.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Gift Boxes", "slug": "gift-boxes", "image": "https://images.pexels.com/photos/264892/pexels-photo-264892.jpeg?auto=compress&cs=tinysrgb&w=600", "icon": "https://images.pexels.com/photos/264892/pexels-photo-264892.jpeg?auto=compress&cs=tinysrgb&w=100"}
+    ]
+
+def get_default_products():
+    return [
+        {"id": str(uuid.uuid4()), "name": "Premium California Almonds", "slug": "premium-california-almonds", "category": "nuts-dry-fruits", "type": "Almonds", "basePrice": 145, "image": "https://images.pexels.com/photos/1013420/pexels-photo-1013420.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/1013420/pexels-photo-1013420.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF001", "shortDescription": "Premium quality California almonds, rich in nutrients.", "description": "Our Premium California Almonds are carefully selected from the finest orchards.", "benefits": ["Rich in Vitamin E", "Supports heart health", "High protein content"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Jumbo Cashews Premium", "slug": "jumbo-cashews-premium", "category": "nuts-dry-fruits", "type": "Cashews", "basePrice": 185, "image": "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF002", "shortDescription": "Large, creamy jumbo cashews with rich buttery taste.", "description": "Our Jumbo Cashews are the finest quality whole cashews.", "benefits": ["Source of magnesium", "Promotes brain function", "Supports bone health"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Roasted Salted Cashews", "slug": "roasted-salted-cashews", "category": "nuts-dry-fruits", "type": "Roasted Cashews", "basePrice": 210, "image": "https://images.pexels.com/photos/1013420/pexels-photo-1013420.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/1013420/pexels-photo-1013420.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF003", "shortDescription": "Perfectly roasted cashews with Himalayan salt.", "description": "Our Roasted Salted Cashews are dry roasted to perfection.", "benefits": ["Satisfying crunchy snack", "Plant protein source", "Heart-healthy fats"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Premium Walnut Kernels", "slug": "premium-walnut-kernels", "category": "nuts-dry-fruits", "type": "Walnuts", "basePrice": 250, "image": "https://images.pexels.com/photos/4033327/pexels-photo-4033327.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/4033327/pexels-photo-4033327.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF004", "shortDescription": "Light halves walnut kernels for brain health.", "description": "Premium Walnut Kernels rich in omega-3 fatty acids.", "benefits": ["Omega-3 fatty acids", "Brain health support", "Anti-inflammatory"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Afghan Black Raisins", "slug": "afghan-black-raisins", "category": "nuts-dry-fruits", "type": "Raisins", "basePrice": 85, "image": "https://images.pexels.com/photos/4033329/pexels-photo-4033329.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/4033329/pexels-photo-4033329.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF005", "shortDescription": "Premium Afghan black raisins, naturally sweet.", "description": "Sun-dried grapes from the finest Afghan vineyards.", "benefits": ["Natural iron source", "Boosts energy", "Digestive health"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Premium Mix Dry Fruits", "slug": "premium-mix-dry-fruits", "category": "mix-dry-fruits", "type": "Mix dry fruits", "basePrice": 165, "image": "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF006", "shortDescription": "Perfect blend of almonds, cashews, raisins.", "description": "Carefully curated blend of finest dry fruits.", "benefits": ["Complete nutrition", "Variety of flavors", "Healthy snacking"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Pista Akbari Premium", "slug": "pista-akbari-premium", "category": "nuts-dry-fruits", "type": "Pistachios", "basePrice": 195, "image": "https://images.pexels.com/photos/6157057/pexels-photo-6157057.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/6157057/pexels-photo-6157057.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF007", "shortDescription": "Large Akbari pistachios with vibrant green color.", "description": "Finest quality Iranian pistachios.", "benefits": ["Excellent protein source", "Rich in fiber", "Eye health"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Makhana Plain Premium", "slug": "makhana-plain-premium", "category": "makhana", "type": "Makhana", "basePrice": 175, "image": "https://images.pexels.com/photos/7446005/pexels-photo-7446005.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/7446005/pexels-photo-7446005.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF008", "shortDescription": "Light and crunchy fox nuts for healthy snacking.", "description": "Premium Makhana handpicked and processed.", "benefits": ["Low calorie snack", "Rich in calcium", "Anti-aging"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Premium Dried Figs", "slug": "premium-dried-figs", "category": "nuts-dry-fruits", "type": "Dried Fig", "basePrice": 220, "image": "https://images.pexels.com/photos/6157049/pexels-photo-6157049.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/6157049/pexels-photo-6157049.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF009", "shortDescription": "Soft and sweet Turkish dried figs.", "description": "Premium Dried Figs sourced from Turkey.", "benefits": ["Dietary fiber", "Heart health", "Strong bones"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Pumpkin Seeds Raw", "slug": "pumpkin-seeds-raw", "category": "seeds", "type": "Pumpkin Seeds", "basePrice": 125, "image": "https://images.pexels.com/photos/4750274/pexels-photo-4750274.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/4750274/pexels-photo-4750274.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF010", "shortDescription": "Raw green pumpkin seeds with zinc.", "description": "Nutrient-dense hulled pumpkin seeds.", "benefits": ["Source of zinc", "High in magnesium", "Sleep quality"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Sunflower Seeds Raw", "slug": "sunflower-seeds-raw", "category": "seeds", "type": "Sunflower Seeds", "basePrice": 95, "image": "https://images.pexels.com/photos/4750269/pexels-photo-4750269.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/4750269/pexels-photo-4750269.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF011", "shortDescription": "Nutrient-rich sunflower seeds.", "description": "Raw Sunflower Seeds packed with vitamin E.", "benefits": ["Rich in Vitamin E", "Selenium for immunity", "Healthy skin"], "features": ["Healthy Heart", "Gluten Free"]},
+        {"id": str(uuid.uuid4()), "name": "Medjool Dates Premium", "slug": "medjool-dates-premium", "category": "dates", "type": "Dates", "basePrice": 320, "image": "https://images.pexels.com/photos/5945755/pexels-photo-5945755.jpeg?auto=compress&cs=tinysrgb&w=500", "images": ["https://images.pexels.com/photos/5945755/pexels-photo-5945755.jpeg?auto=compress&cs=tinysrgb&w=500"], "sku": "DRF012", "shortDescription": "Large, soft Medjool dates.", "description": "Premium Medjool Dates - King of Dates.", "benefits": ["Natural energy", "Rich in potassium", "Digestive health"], "features": ["Healthy Heart", "Gluten Free"]}
+    ]
+
+def get_default_hero_slides():
+    return [
+        {"id": str(uuid.uuid4()), "title": "Premium Quality Dry Fruits", "subtitle": "Live With Health", "description": "Discover our handpicked selection of premium dry fruits, nuts, and seeds", "image": "https://images.pexels.com/photos/86649/pexels-photo-86649.jpeg?auto=compress&cs=tinysrgb&w=1920&h=800&fit=crop", "cta": "Shop Now"},
+        {"id": str(uuid.uuid4()), "title": "Festival Gift Hampers", "subtitle": "Celebrate with Health", "description": "Beautiful gift boxes perfect for every occasion", "image": "https://images.pexels.com/photos/4033324/pexels-photo-4033324.jpeg?auto=compress&cs=tinysrgb&w=1920&h=800&fit=crop", "cta": "View Collection"},
+        {"id": str(uuid.uuid4()), "title": "Healthy Seeds & Makhana", "subtitle": "Nature's Best", "description": "Explore our range of nutrient-rich seeds and fox nuts", "image": "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=1920&h=800&fit=crop", "cta": "Explore Now"}
+    ]
+
+def get_default_testimonials():
+    return [
+        {"id": str(uuid.uuid4()), "name": "Priya Sharma", "review": "Excellent quality dry fruits! The almonds and cashews are always fresh and delicious.", "avatar": "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Rajesh Kumar", "review": "Best place for premium dry fruits. Excellent packaging and timely delivery!", "avatar": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Anita Patel", "review": "The gift boxes are perfect for occasions. Everyone loved them!", "avatar": "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Mohammed Ali", "review": "Fresh and premium quality nuts. The Makhana is crispy and tasty!", "avatar": "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Sunita Verma", "review": "Amazing customer service and product quality. The dates are the best!", "avatar": "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100"},
+        {"id": str(uuid.uuid4()), "name": "Vikram Singh", "review": "Top-notch quality with amazing flavor. Perfect for daily snacking!", "avatar": "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=100"}
+    ]
+
+def get_default_gift_boxes():
+    return [
+        {"id": str(uuid.uuid4()), "name": "Premium Gift Hamper", "image": "https://images.pexels.com/photos/5945770/pexels-photo-5945770.jpeg?auto=compress&cs=tinysrgb&w=500", "price": 1499},
+        {"id": str(uuid.uuid4()), "name": "Festive Delight Box", "image": "https://images.pexels.com/photos/4033324/pexels-photo-4033324.jpeg?auto=compress&cs=tinysrgb&w=500", "price": 1999},
+        {"id": str(uuid.uuid4()), "name": "Corporate Gift Set", "image": "https://images.pexels.com/photos/264892/pexels-photo-264892.jpeg?auto=compress&cs=tinysrgb&w=500", "price": 2499},
+        {"id": str(uuid.uuid4()), "name": "Royal Collection Box", "image": "https://images.pexels.com/photos/1028714/pexels-photo-1028714.jpeg?auto=compress&cs=tinysrgb&w=500", "price": 3499},
+        {"id": str(uuid.uuid4()), "name": "Anniversary Special", "image": "https://images.pexels.com/photos/5945759/pexels-photo-5945759.jpeg?auto=compress&cs=tinysrgb&w=500", "price": 2999},
+        {"id": str(uuid.uuid4()), "name": "Diwali Gift Box", "image": "https://images.pexels.com/photos/4033321/pexels-photo-4033321.jpeg?auto=compress&cs=tinysrgb&w=500", "price": 1799}
+    ]
+
+# Helper function to initialize collection with default data
+async def ensure_collection_data(collection_name: str, get_defaults_func):
+    """Check if collection is empty and populate with defaults if needed"""
+    count = await db[collection_name].count_documents({})
+    if count == 0:
+        defaults = get_defaults_func()
+        if defaults:
+            await db[collection_name].insert_many(defaults)
+            logging.info(f"Initialized {collection_name} with {len(defaults)} default items")
+    return await db[collection_name].find({}, {"_id": 0}).to_list(1000)
+
+async def ensure_site_settings():
+    """Ensure site settings exist"""
+    settings = await db.site_settings.find_one({"id": "site_settings"}, {"_id": 0})
+    if not settings:
+        await db.site_settings.insert_one(DEFAULT_SITE_SETTINGS.copy())
+        logging.info("Initialized site settings with defaults")
+        return DEFAULT_SITE_SETTINGS.copy()
+    return settings
+
 # ============== MODELS ==============
 
 # Status Check Models
