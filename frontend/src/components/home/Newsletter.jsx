@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
 import { Mail, Send } from 'lucide-react';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return;
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      await axios.post(`${BACKEND_URL}/api/newsletter`, { email });
       setSubscribed(true);
       setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
+      setTimeout(() => setSubscribed(false), 5000);
+    } catch (err) {
+      if (err.response?.data?.detail === 'Email already subscribed') {
+        setError('This email is already subscribed!');
+      } else {
+        setError('Failed to subscribe. Please try again.');
+      }
+      setTimeout(() => setError(''), 3000);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,9 +71,10 @@ const Newsletter = () => {
             </div>
             <button
               type="submit"
-              className="px-8 py-4 bg-[#8BC34A] hover:bg-[#7CB342] text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105"
+              disabled={loading}
+              className="px-8 py-4 bg-[#8BC34A] hover:bg-[#7CB342] text-white font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {subscribed ? 'Subscribed!' : 'Subscribe'}
+              {loading ? 'Subscribing...' : subscribed ? 'Subscribed!' : 'Subscribe'}
               <Send className="w-5 h-5" />
             </button>
           </form>
@@ -61,6 +82,12 @@ const Newsletter = () => {
           {subscribed && (
             <p className="mt-4 text-[#C1E899] font-medium animate-pulse">
               Thank you for subscribing! 
+            </p>
+          )}
+          
+          {error && (
+            <p className="mt-4 text-red-300 font-medium">
+              {error}
             </p>
           )}
         </div>
