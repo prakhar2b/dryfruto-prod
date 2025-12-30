@@ -121,6 +121,42 @@ backend:
         agent: "testing"
         comment: "✅ BACKEND API TESTS PASSED: All 5 tests successful. GET /api/site-settings returns bulkOrderProductTypes (7 items) and bulkOrderBenefits (7 items) arrays. PUT /api/site-settings successfully updates both fields. Added test data: 'Spices' to product types and 'Free delivery above 50kg' to benefits. Changes persist correctly. API connectivity confirmed at https://dryfruthealth.preview.emergentagent.com/api"
 
+  - task: "Health Check Endpoint - GET /api/health for Docker health checks"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ HEALTH CHECK ENDPOINT WORKING: GET /api/health returns proper JSON response {'status': 'healthy', 'database': 'connected'} when MongoDB is working. Endpoint confirms database connectivity and returns HTTP 200 with valid JSON. Deployment health check functionality is fully operational."
+
+  - task: "Seed Data Endpoint - POST /api/seed-data with improved error handling"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ SEED DATA ENDPOINT WORKING: POST /api/seed-data handles 'already seeded' case gracefully, returning {'message': 'Data already seeded', 'products': 12} with proper error handling. Endpoint provides informative responses and better error messages as expected for deployment fixes."
+
+  - task: "Core API Endpoints - Categories, Products, Site Settings, Hero Slides, Testimonials, Gift Boxes"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ CORE API ENDPOINTS WORKING: All core endpoints verified successfully. GET /api/categories returns 6 categories, GET /api/products returns 12 products, GET /api/site-settings returns complete site configuration, GET /api/hero-slides returns 3 hero slides, GET /api/testimonials returns 6 testimonials, GET /api/gift-boxes returns 6 gift boxes. All endpoints return HTTP 200 with valid JSON responses and expected data structures."
+
 frontend:
   - task: "Theme Color Change - Update primary color to #C1E899"
     implemented: true
