@@ -34,7 +34,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - REACT_APP_BACKEND_URL=https://statellmarketing.com
+        - REACT_APP_BACKEND_URL=http://statellmarketing.com:9001
     container_name: sm2024web01
     restart: unless-stopped
     depends_on:
@@ -42,7 +42,7 @@ services:
     networks:
       - app-network
 
-  # Nginx Reverse Proxy (HTTP & HTTPS)
+  # Nginx Reverse Proxy (HTTP only - HTTPS requires SSL setup)
   nginx:
     build:
       context: ./nginx
@@ -51,7 +51,6 @@ services:
     restart: unless-stopped
     ports:
       - "9001:80"
-      - "9443:443"
     volumes:
       - ./certbot/conf:/etc/letsencrypt:ro
       - ./certbot/www:/var/www/certbot:ro
