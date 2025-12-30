@@ -618,10 +618,7 @@ async def delete_gift_box(gift_box_id: str):
 # ----- Site Settings Routes -----
 @api_router.get("/site-settings", response_model=SiteSettings)
 async def get_site_settings():
-    settings = await db.site_settings.find_one({"id": "site_settings"}, {"_id": 0})
-    if not settings:
-        # Return default settings
-        return SiteSettings()
+    settings = await ensure_site_settings()
     return SiteSettings(**settings)
 
 @api_router.put("/site-settings", response_model=SiteSettings)
