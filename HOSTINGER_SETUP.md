@@ -10,21 +10,6 @@
 | Backend API | sm2024api01 |
 | Frontend | sm2024web01 |
 | Nginx Proxy | sm2024proxy01 |
-| Certbot SSL | sm2024ssl01 |
-
----
-
-## Auto-Seeded Data
-
-When you first deploy, the database will **automatically be populated** with default data:
-- **12 Products** (almonds, cashews, walnuts, etc.)
-- **6 Categories** (Nuts & Dry Fruits, Dates, Seeds, etc.)
-- **3 Hero Slides**
-- **6 Testimonials**
-- **6 Gift Boxes**
-- **Site Settings** (business name, contact info, etc.)
-
-No manual seeding required! The backend auto-seeds on startup when the database is empty.
 
 ---
 
@@ -35,6 +20,34 @@ No manual seeding required! The backend auto-seeds on startup when the database 
 | HTTP | 9001 | `http://statellmarketing.com:9001` |
 | HTTPS | 9443 | `https://statellmarketing.com:9443` |
 | Admin | 9001 | `http://statellmarketing.com:9001/admin` |
+
+---
+
+## SSL Certificate (Inside Docker)
+
+SSL certificates are generated **automatically inside the Docker container**:
+
+1. **Default behavior (GENERATE_SSL=false)**: Creates a self-signed certificate
+   - HTTPS works immediately but browsers will show a security warning
+   - Good for testing
+
+2. **Let's Encrypt (GENERATE_SSL=true)**: Attempts to get a real certificate
+   - Requires port 80 to be accessible from the internet
+   - Domain must point to your server's IP
+
+### To enable Let's Encrypt:
+Edit `docker-compose.yml` and set:
+```yaml
+environment:
+  - GENERATE_SSL=true
+  - SSL_EMAIL=your-email@example.com
+```
+
+Then rebuild and restart:
+```bash
+docker-compose down
+docker-compose up -d --build
+```
 
 ---
 
@@ -61,77 +74,20 @@ Login to [Hostinger Control Panel](https://hpanel.hostinger.com):
 4. Select `docker-compose.yml`
 5. Click **Deploy**
 
-### 3. Test HTTP First
+### 3. Test Access
 
-After deployment, test HTTP access:
-```
-http://statellmarketing.com:9001
-```
-
-The website should load with all products and data already populated!
-
-If HTTP works, proceed to SSL setup.
+After deployment:
+- HTTP: `http://statellmarketing.com:9001`
+- HTTPS: `https://statellmarketing.com:9443` (may show security warning with self-signed cert)
 
 ---
 
-## SSL/HTTPS Configuration (Port 9443)
+## Admin Panel Features
 
-### Why HTTPS shows error initially?
-HTTPS requires SSL certificates. Without certificates, nginx cannot start the HTTPS server, causing connection errors on port 9443.
-
-### Step-by-Step SSL Setup:
-
-#### Step 1: SSH into your Hostinger VPS
-```bash
-ssh root@YOUR_VPS_IP
-```
-
-#### Step 2: Navigate to project directory
-```bash
-cd /docker/dryfruto-vikram
-# OR find your project:
-ls /docker/
-```
-
-#### Step 3: Create certbot directories
-```bash
-mkdir -p certbot/conf certbot/www
-```
-
-#### Step 4: Get SSL Certificate from Let's Encrypt
-```bash
-# Stop nginx temporarily (it's blocking port 80 needed for verification)
-docker-compose stop nginx
-
-# Run certbot to get certificate
-docker run -it --rm \
-  -v $(pwd)/certbot/conf:/etc/letsencrypt \
-  -v $(pwd)/certbot/www:/var/www/certbot \
-  -p 80:80 \
-  certbot/certbot certonly \
-  --standalone \
-  --email your-email@example.com \
-  --agree-tos \
-  --no-eff-email \
-  -d statellmarketing.com \
-  -d www.statellmarketing.com
-```
-
-#### Step 5: Verify certificate was created
-```bash
-ls certbot/conf/live/statellmarketing.com/
-# Should show: fullchain.pem, privkey.pem, cert.pem, chain.pem
-```
-
-#### Step 6: Restart nginx with SSL
-```bash
-docker-compose up -d nginx
-```
-
-#### Step 7: Test HTTPS
-```
-https://statellmarketing.com:9443
-```
+### Seed Initial Data
+- Go to Admin Panel → Dashboard
+- Click "Seed Initial Data" button to reset all data to defaults
+- Useful for fresh start or testing
 
 ---
 
@@ -147,7 +103,7 @@ Internet
          ▼
 ┌─────────────────────────────────────┐
 │      sm2024proxy01 (Nginx)          │
-│   statellmarketing.com              │
+│   + SSL Certificate Generation      │
 └─────────────────┬───────────────────┘
                   │
     ┌─────────────┼───────────────┐
@@ -159,23 +115,7 @@ Internet
 │ :80    │  │  :8001   │  │ :27017    │
 │React   │  │ FastAPI  │  │           │
 └────────┘  └──────────┘  └───────────┘
-                │
-                ▼
-         Auto-seeds data
-         on first startup
 ```
-
----
-
-## Startup Sequence
-
-1. **MongoDB** starts first and becomes healthy
-2. **Backend** starts after MongoDB is healthy
-   - Checks if database is empty
-   - If empty, auto-seeds default data (products, categories, etc.)
-   - Logs: "Auto-seed completed successfully!"
-3. **Frontend** starts after Backend is healthy
-4. **Nginx** starts and routes traffic
 
 ---
 
@@ -185,10 +125,8 @@ Internet
 # View all logs
 docker-compose logs -f
 
-# View backend logs (check for auto-seed messages)
+# View specific service logs
 docker logs sm2024api01
-
-# View nginx logs only
 docker logs sm2024proxy01
 
 # Restart all services
@@ -199,92 +137,48 @@ docker-compose down
 docker-compose build --no-cache
 docker-compose up -d
 
+# Check SSL certificate
+docker exec sm2024proxy01 cat /etc/letsencrypt/live/statellmarketing.com/fullchain.pem
+
+# Regenerate SSL certificate
+docker exec sm2024proxy01 /generate-ssl.sh
+
 # Check container status
 docker ps
-
-# Access MongoDB
-docker exec -it sm2024db01 mongosh
-
-# Check if data was seeded
-docker exec -it sm2024db01 mongosh dryfruto --eval "db.products.countDocuments()"
 ```
 
 ---
 
 ## Troubleshooting
 
-### Data not showing on website?
-
-**Option 1: Check if auto-seed ran**
+### Website not loading?
 ```bash
-docker logs sm2024api01 | grep -i seed
+docker ps
+# Check all containers are running
 ```
 
-You should see:
-```
-MongoDB connection successful
-Database is empty, auto-seeding with default data...
-Seeded 6 categories
-Seeded 12 products
-...
-Auto-seed completed successfully!
-```
-
-**Option 2: Manually trigger seed via Admin Panel**
-1. Go to `http://statellmarketing.com:9001/admin`
-2. Click "Seed Initial Data" button
-3. Confirm the action
-4. Wait for success message
-
-**Option 3: Manually trigger seed via API**
+### SSL certificate issues?
 ```bash
-curl -X POST http://statellmarketing.com:9001/api/seed-data
+docker logs sm2024proxy01
+# Look for SSL generation messages
 ```
 
-Expected response:
-```json
-{"message":"Data seeded successfully","categories":6,"products":12,"heroSlides":3,"testimonials":6,"giftBoxes":6}
-```
+### Data not showing?
+- Go to Admin Panel → Dashboard
+- Click "Seed Initial Data" to populate default data
 
-### Backend not starting?
+### Backend errors?
 ```bash
 docker logs sm2024api01
-```
-
-### MongoDB connection issues?
-```bash
-# Check if MongoDB is running
-docker ps | grep mongodb
-
-# Check MongoDB logs
-docker logs sm2024db01
-
-# Test MongoDB connection from backend container
-docker exec -it sm2024api01 python -c "from motor.motor_asyncio import AsyncIOMotorClient; c = AsyncIOMotorClient('mongodb://mongodb:27017'); print('Connected!')"
-```
-
-### Import error for seed_data?
-The seed_data.py file should be in /app/ inside the backend container:
-```bash
-docker exec -it sm2024api01 ls -la /app/
-# Should show seed_data.py
 ```
 
 ---
 
 ## Firewall Configuration
 
-Make sure these ports are open on your VPS:
-
+Make sure these ports are open:
 ```bash
-# Check firewall status
-ufw status
-
-# Open required ports
 ufw allow 9001/tcp   # HTTP
 ufw allow 9443/tcp   # HTTPS
 ufw allow 22/tcp     # SSH
-
-# Enable firewall
-ufw enable
 ```
