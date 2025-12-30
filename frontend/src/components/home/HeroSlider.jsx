@@ -17,10 +17,10 @@ const HeroSlider = () => {
 
   if (heroSlides.length === 0) {
     return (
-      <section className="h-[500px] md:h-[600px] bg-gradient-to-r from-emerald-800 to-emerald-900 flex items-center justify-center">
+      <section className="h-[500px] md:h-[600px] bg-gradient-to-r from-[#558B2F] to-[#689F38] flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-4xl font-bold mb-4">Welcome to DryFruto</h1>
-          <p className="text-emerald-200">Premium Dry Fruits & Nuts</p>
+          <p className="text-[#C1E899]">Premium Dry Fruits & Nuts</p>
         </div>
       </section>
     );
@@ -57,7 +57,7 @@ const HeroSlider = () => {
           
           <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
             <div className="max-w-xl">
-              <p className="text-emerald-400 font-medium mb-2 animate-fade-in-up">
+              <p className="text-[#C1E899] font-medium mb-2 animate-fade-in-up">
                 {slide.subtitle}
               </p>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
@@ -68,7 +68,7 @@ const HeroSlider = () => {
               </p>
               <Link
                 to="/products"
-                className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
+                className="inline-flex items-center gap-2 bg-[#8BC34A] hover:bg-[#7CB342] text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
               >
                 {slide.cta}
                 <ChevronRight className="w-5 h-5" />
@@ -100,7 +100,7 @@ const HeroSlider = () => {
             onClick={() => goToSlide(index)}
             className={`w-3 h-3 rounded-full transition-all ${
               index === currentSlide 
-                ? 'bg-emerald-500 w-8' 
+                ? 'bg-[#8BC34A] w-8' 
                 : 'bg-white/50 hover:bg-white/70'
             }`}
           />
