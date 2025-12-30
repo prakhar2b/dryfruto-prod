@@ -14,6 +14,20 @@
 
 ---
 
+## Auto-Seeded Data
+
+When you first deploy, the database will **automatically be populated** with default data:
+- **12 Products** (almonds, cashews, walnuts, etc.)
+- **6 Categories** (Nuts & Dry Fruits, Dates, Seeds, etc.)
+- **3 Hero Slides**
+- **6 Testimonials**
+- **6 Gift Boxes**
+- **Site Settings** (business name, contact info, etc.)
+
+No manual seeding required! The backend auto-seeds on startup when the database is empty.
+
+---
+
 ## Access URLs
 
 | Protocol | Port | URL |
@@ -53,6 +67,8 @@ After deployment, test HTTP access:
 ```
 http://statellmarketing.com:9001
 ```
+
+The website should load with all products and data already populated!
 
 If HTTP works, proceed to SSL setup.
 
@@ -119,87 +135,6 @@ https://statellmarketing.com:9443
 
 ---
 
-## Alternative SSL Method (Using Webroot)
-
-If standalone method doesn't work:
-
-```bash
-# Make sure nginx is running first
-docker-compose up -d nginx
-
-# Run certbot with webroot method
-docker run -it --rm \
-  -v $(pwd)/certbot/conf:/etc/letsencrypt \
-  -v $(pwd)/certbot/www:/var/www/certbot \
-  certbot/certbot certonly \
-  --webroot \
-  --webroot-path=/var/www/certbot \
-  --email your-email@example.com \
-  --agree-tos \
-  --no-eff-email \
-  -d statellmarketing.com \
-  -d www.statellmarketing.com
-
-# Restart nginx
-docker-compose restart nginx
-```
-
----
-
-## SSL Certificate Renewal
-
-Certificates expire every 90 days. To renew:
-
-```bash
-# Manual renewal
-docker run -it --rm \
-  -v $(pwd)/certbot/conf:/etc/letsencrypt \
-  -v $(pwd)/certbot/www:/var/www/certbot \
-  certbot/certbot renew
-
-# Restart nginx after renewal
-docker-compose restart nginx
-```
-
----
-
-## Troubleshooting SSL
-
-### Error: "Connection refused on port 9443"
-- SSL certificates not configured yet
-- Follow the SSL setup steps above
-
-### Error: "Certificate not found"
-```bash
-# Check if certificates exist
-ls -la certbot/conf/live/statellmarketing.com/
-
-# If empty, run certbot again
-```
-
-### Error: "Certificate domain mismatch"
-- Make sure DNS is properly configured
-- Domain must point to your VPS IP
-- Check with: `nslookup statellmarketing.com`
-
-### Error: "Too many certificate requests"
-- Let's Encrypt has rate limits (5 per week)
-- Wait and try again, or use staging server for testing:
-```bash
-docker run -it --rm \
-  -v $(pwd)/certbot/conf:/etc/letsencrypt \
-  -v $(pwd)/certbot/www:/var/www/certbot \
-  -p 80:80 \
-  certbot/certbot certonly \
-  --standalone \
-  --staging \
-  --email your-email@example.com \
-  --agree-tos \
-  -d statellmarketing.com
-```
-
----
-
 ## Architecture
 
 ```
@@ -222,9 +157,25 @@ Internet
 │web01   │  │ api01    │  │ db01      │
 │Frontend│  │ Backend  │  │ MongoDB   │
 │ :80    │  │  :8001   │  │ :27017    │
-│Node 14 │  │ FastAPI  │  │           │
+│React   │  │ FastAPI  │  │           │
 └────────┘  └──────────┘  └───────────┘
+                │
+                ▼
+         Auto-seeds data
+         on first startup
 ```
+
+---
+
+## Startup Sequence
+
+1. **MongoDB** starts first and becomes healthy
+2. **Backend** starts after MongoDB is healthy
+   - Checks if database is empty
+   - If empty, auto-seeds default data (products, categories, etc.)
+   - Logs: "Auto-seed completed successfully!"
+3. **Frontend** starts after Backend is healthy
+4. **Nginx** starts and routes traffic
 
 ---
 
@@ -233,6 +184,9 @@ Internet
 ```bash
 # View all logs
 docker-compose logs -f
+
+# View backend logs (check for auto-seed messages)
+docker logs sm2024api01
 
 # View nginx logs only
 docker logs sm2024proxy01
@@ -250,6 +204,42 @@ docker ps
 
 # Access MongoDB
 docker exec -it sm2024db01 mongosh
+
+# Check if data was seeded
+docker exec -it sm2024db01 mongosh dryfruto --eval "db.products.countDocuments()"
+```
+
+---
+
+## Troubleshooting
+
+### Data not showing on website?
+Check if auto-seed ran:
+```bash
+docker logs sm2024api01 | grep -i seed
+```
+
+You should see:
+```
+Database is empty, auto-seeding with default data...
+Seeded 6 categories
+Seeded 12 products
+...
+Auto-seed completed successfully!
+```
+
+### Backend not starting?
+```bash
+docker logs sm2024api01
+```
+
+### MongoDB connection issues?
+```bash
+# Check if MongoDB is running
+docker ps | grep mongodb
+
+# Check MongoDB logs
+docker logs sm2024db01
 ```
 
 ---
