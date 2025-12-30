@@ -550,48 +550,57 @@ async def update_site_settings(settings: SiteSettingsUpdate):
 # ----- Seed Data Route -----
 @api_router.post("/seed-data")
 async def seed_data():
-    """Seed initial data from mock data"""
+    """Seed initial data from mock data - clears existing data and reseeds"""
     try:
-        # Check if data already exists
-        existing_products = await db.products.count_documents({})
-        if existing_products > 0:
-            return {"message": "Data already seeded", "products": existing_products}
-        
-        # Import mock data
+        # Import mock data first to ensure it's available
         try:
             from seed_data import categories, products, hero_slides, testimonials, gift_boxes, site_settings
         except ImportError as e:
             logging.error(f"Failed to import seed_data: {e}")
             raise HTTPException(status_code=500, detail=f"Failed to import seed_data module: {str(e)}")
         
-        # Insert categories
+        # Clear existing data from all collections
+        await db.categories.delete_many({})
+        await db.products.delete_many({})
+        await db.hero_slides.delete_many({})
+        await db.testimonials.delete_many({})
+        await db.gift_boxes.delete_many({})
+        
+        # Insert fresh categories
         if categories:
             await db.categories.insert_many([dict(c) for c in categories])
         
-        # Insert products
+        # Insert fresh products
         if products:
             await db.products.insert_many([dict(p) for p in products])
         
-        # Insert hero slides
+        # Insert fresh hero slides
         if hero_slides:
             await db.hero_slides.insert_many([dict(h) for h in hero_slides])
         
-        # Insert testimonials
+        # Insert fresh testimonials
         if testimonials:
             await db.testimonials.insert_many([dict(t) for t in testimonials])
         
-        # Insert gift boxes
+        # Insert fresh gift boxes
         if gift_boxes:
             await db.gift_boxes.insert_many([dict(g) for g in gift_boxes])
         
-        # Insert site settings
+        # Update/insert site settings (preserves any custom settings)
         await db.site_settings.update_one(
             {"id": "site_settings"},
             {"$set": dict(site_settings)},
             upsert=True
         )
         
-        return {"message": "Data seeded successfully", "categories": len(categories), "products": len(products)}
+        return {
+            "message": "Data seeded successfully", 
+            "categories": len(categories), 
+            "products": len(products),
+            "heroSlides": len(hero_slides),
+            "testimonials": len(testimonials),
+            "giftBoxes": len(gift_boxes)
+        }
     except HTTPException:
         raise
     except Exception as e:
