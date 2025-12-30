@@ -557,8 +557,18 @@ async def update_site_settings(settings: SiteSettingsUpdate):
 # ----- Seed Data Route -----
 @api_router.post("/seed-data")
 async def seed_data_endpoint():
-    """Reset database with default data"""
+    """Reset database with seed data from seed_data.py"""
     try:
+        # Import seed data from seed_data.py
+        from seed_data import (
+            SEED_SITE_SETTINGS,
+            SEED_CATEGORIES,
+            SEED_PRODUCTS,
+            SEED_HERO_SLIDES,
+            SEED_TESTIMONIALS,
+            SEED_GIFT_BOXES
+        )
+        
         # Clear all collections
         await db.categories.delete_many({})
         await db.products.delete_many({})
@@ -566,29 +576,22 @@ async def seed_data_endpoint():
         await db.testimonials.delete_many({})
         await db.gift_boxes.delete_many({})
         
-        # Get fresh default data
-        categories = get_default_categories()
-        products = get_default_products()
-        hero_slides = get_default_hero_slides()
-        testimonials = get_default_testimonials()
-        gift_boxes = get_default_gift_boxes()
-        
-        # Insert all default data
-        if categories:
-            await db.categories.insert_many(categories)
-        if products:
-            await db.products.insert_many(products)
-        if hero_slides:
-            await db.hero_slides.insert_many(hero_slides)
-        if testimonials:
-            await db.testimonials.insert_many(testimonials)
-        if gift_boxes:
-            await db.gift_boxes.insert_many(gift_boxes)
+        # Insert all seed data
+        if SEED_CATEGORIES:
+            await db.categories.insert_many(SEED_CATEGORIES)
+        if SEED_PRODUCTS:
+            await db.products.insert_many(SEED_PRODUCTS)
+        if SEED_HERO_SLIDES:
+            await db.hero_slides.insert_many(SEED_HERO_SLIDES)
+        if SEED_TESTIMONIALS:
+            await db.testimonials.insert_many(SEED_TESTIMONIALS)
+        if SEED_GIFT_BOXES:
+            await db.gift_boxes.insert_many(SEED_GIFT_BOXES)
         
         # Reset site settings
         await db.site_settings.update_one(
             {"id": "site_settings"},
-            {"$set": DEFAULT_SITE_SETTINGS.copy()},
+            {"$set": SEED_SITE_SETTINGS.copy()},
             upsert=True
         )
         
@@ -596,12 +599,15 @@ async def seed_data_endpoint():
         
         return {
             "message": "Data seeded successfully",
-            "categories": len(categories),
-            "products": len(products),
-            "heroSlides": len(hero_slides),
-            "testimonials": len(testimonials),
-            "giftBoxes": len(gift_boxes)
+            "categories": len(SEED_CATEGORIES),
+            "products": len(SEED_PRODUCTS),
+            "heroSlides": len(SEED_HERO_SLIDES),
+            "testimonials": len(SEED_TESTIMONIALS),
+            "giftBoxes": len(SEED_GIFT_BOXES)
         }
+    except ImportError as e:
+        logging.error(f"Failed to import seed_data: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to import seed_data module: {str(e)}")
     except Exception as e:
         logging.error(f"Seed data error: {e}")
         raise HTTPException(status_code=500, detail=f"Error seeding data: {str(e)}")
