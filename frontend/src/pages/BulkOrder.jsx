@@ -109,7 +109,7 @@ const BulkOrder = () => {
                     <p className="text-gray-600 mb-4">Your inquiry has been submitted successfully. Our team will contact you shortly.</p>
                     <button
                       onClick={() => setSubmitted(false)}
-                      className="text-emerald-600 hover:text-emerald-700 font-medium"
+                      className="text-[#8BC34A] hover:text-[#689F38] font-medium"
                     >
                       Submit another inquiry
                     </button>
