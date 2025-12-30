@@ -2,7 +2,7 @@ services:
   # MongoDB Database
   mongodb:
     image: mongo:6.0
-    container_name: sm2024db01
+    container_name: dryfruto_db
     restart: unless-stopped
     environment:
       MONGO_INITDB_DATABASE: dryfruto
@@ -22,11 +22,13 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: sm2024api01
+    container_name: dryfruto_api
     restart: unless-stopped
     environment:
+      # Internal MongoDB connection using Docker service name
       - MONGO_URL=mongodb://mongodb:27017
       - DB_NAME=dryfruto
+      - CORS_ORIGINS=*
     volumes:
       - uploads_data:/app/uploads
     depends_on:
@@ -41,14 +43,12 @@ services:
       retries: 5
       start_period: 30s
 
-  # Frontend (React with Node v14)
+  # Frontend (React)
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        - REACT_APP_BACKEND_URL=http://statellmarketing.com:9001
-    container_name: sm2024web01
+    container_name: dryfruto_web
     restart: unless-stopped
     depends_on:
       backend:
@@ -56,21 +56,20 @@ services:
     networks:
       - app-network
 
-  # Nginx Reverse Proxy with SSL
+  # Nginx Reverse Proxy
   nginx:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    container_name: sm2024proxy01
+    container_name: dryfruto_proxy
     restart: unless-stopped
     ports:
-      - "9001:80"
-      - "9443:443"
+      - "80:80"
+      - "443:443"
     environment:
-      - DOMAIN=statellmarketing.com
-      - SSL_EMAIL=admin@statellmarketing.com
-      # Set to "true" to attempt Let's Encrypt, otherwise self-signed
-      - GENERATE_SSL=false
+      - DOMAIN=${DOMAIN:-localhost}
+      - SSL_EMAIL=${SSL_EMAIL:-admin@example.com}
+      - GENERATE_SSL=${GENERATE_SSL:-false}
     volumes:
       - ssl_certs:/etc/letsencrypt
       - certbot_www:/var/www/certbot

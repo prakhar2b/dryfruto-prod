@@ -1,11 +1,11 @@
-# Nginx Dockerfile with SSL certificate generation inside container
+# Nginx Reverse Proxy with SSL support
 FROM nginx:alpine
 
-# Install certbot and its dependencies
-RUN apk add --no-cache certbot certbot-nginx openssl bash
+# Install certbot and dependencies
+RUN apk add --no-cache certbot certbot-nginx openssl bash curl
 
 # Remove default config
-RUN rm /etc/nginx/conf.d/default.conf
+RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Create directories
 RUN mkdir -p /var/www/certbot /etc/letsencrypt /var/log/letsencrypt
@@ -13,12 +13,12 @@ RUN mkdir -p /var/www/certbot /etc/letsencrypt /var/log/letsencrypt
 # Create SSL generation script
 RUN cat > /generate-ssl.sh << 'SCRIPT'
 #!/bin/bash
+DOMAIN="${DOMAIN:-localhost}"
+EMAIL="${SSL_EMAIL:-admin@example.com}"
 
-DOMAIN="${DOMAIN:-statellmarketing.com}"
-EMAIL="${SSL_EMAIL:-admin@statellmarketing.com}"
-
-SSL_CERT="/etc/letsencrypt/live/$DOMAIN/fullchain.pem"
-SSL_KEY="/etc/letsencrypt/live/$DOMAIN/privkey.pem"
+SSL_DIR="/etc/letsencrypt/live/$DOMAIN"
+SSL_CERT="$SSL_DIR/fullchain.pem"
+SSL_KEY="$SSL_DIR/privkey.pem"
 
 # Check if certificates already exist
 if [ -f "$SSL_CERT" ] && [ -f "$SSL_KEY" ]; then
@@ -26,42 +26,39 @@ if [ -f "$SSL_CERT" ] && [ -f "$SSL_KEY" ]; then
     exit 0
 fi
 
+mkdir -p "$SSL_DIR"
+
 # If GENERATE_SSL is not set or is false, use self-signed certificates
 if [ "$GENERATE_SSL" != "true" ]; then
-    echo "GENERATE_SSL not enabled, creating self-signed certificate..."
-    mkdir -p /etc/letsencrypt/live/$DOMAIN
+    echo "Creating self-signed certificate for $DOMAIN..."
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout /etc/letsencrypt/live/$DOMAIN/privkey.pem \
-        -out /etc/letsencrypt/live/$DOMAIN/fullchain.pem \
+        -keyout "$SSL_KEY" \
+        -out "$SSL_CERT" \
         -subj "/CN=$DOMAIN"
-    echo "Self-signed certificate created for $DOMAIN"
+    echo "Self-signed certificate created"
     exit 0
 fi
 
 # Try to get Let's Encrypt certificate
-echo "Attempting to generate Let's Encrypt certificate for $DOMAIN..."
+echo "Attempting Let's Encrypt certificate for $DOMAIN..."
 certbot certonly --standalone \
     --non-interactive \
     --agree-tos \
     --email "$EMAIL" \
-    --domains "$DOMAIN,www.$DOMAIN" \
-    --cert-path /etc/letsencrypt/live/$DOMAIN/fullchain.pem \
-    --key-path /etc/letsencrypt/live/$DOMAIN/privkey.pem \
+    --domains "$DOMAIN" \
     || {
         echo "Let's Encrypt failed, creating self-signed certificate..."
-        mkdir -p /etc/letsencrypt/live/$DOMAIN
         openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-            -keyout /etc/letsencrypt/live/$DOMAIN/privkey.pem \
-            -out /etc/letsencrypt/live/$DOMAIN/fullchain.pem \
+            -keyout "$SSL_KEY" \
+            -out "$SSL_CERT" \
             -subj "/CN=$DOMAIN"
-        echo "Self-signed certificate created for $DOMAIN"
+        echo "Self-signed certificate created"
     }
 SCRIPT
-
 RUN chmod +x /generate-ssl.sh
 
-# Create nginx configuration
-RUN cat > /etc/nginx/nginx.conf << 'EOF'
+# Create nginx configuration template
+RUN cat > /etc/nginx/nginx.conf.template << 'EOF'
 user nginx;
 worker_processes auto;
 error_log /var/log/nginx/error.log warn;
@@ -92,26 +89,48 @@ http {
     gzip_min_length 1024;
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript;
 
-    upstream frontend {
+    # Internal Docker network upstreams
+    upstream frontend_upstream {
         server frontend:80;
     }
 
-    upstream backend {
+    upstream backend_upstream {
         server backend:8001;
     }
 
-    # HTTP Server (Port 80 mapped to 9001)
+    # HTTP Server
     server {
         listen 80;
         listen [::]:80;
-        server_name statellmarketing.com www.statellmarketing.com localhost;
+        server_name ${DOMAIN} www.${DOMAIN} localhost;
 
+        # ACME challenge for Let's Encrypt
         location /.well-known/acme-challenge/ {
             root /var/www/certbot;
         }
 
+        # API routes - proxy to backend container
+        location /api/ {
+            proxy_pass http://backend_upstream/api/;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_read_timeout 300s;
+            proxy_connect_timeout 75s;
+        }
+
+        # Uploads - proxy to backend container
+        location /uploads/ {
+            proxy_pass http://backend_upstream/uploads/;
+            expires 30d;
+            add_header Cache-Control "public";
+        }
+
+        # Frontend - proxy to frontend container
         location / {
-            proxy_pass http://frontend;
+            proxy_pass http://frontend_upstream;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection 'upgrade';
@@ -121,33 +140,17 @@ http {
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_cache_bypass $http_upgrade;
         }
-
-        location /api/ {
-            proxy_pass http://backend/api/;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_read_timeout 300s;
-        }
-
-        location /uploads/ {
-            proxy_pass http://backend/uploads/;
-            expires 30d;
-            add_header Cache-Control "public";
-        }
     }
 
-    # HTTPS Server (Port 443 mapped to 9443)
+    # HTTPS Server
     server {
         listen 443 ssl http2;
         listen [::]:443 ssl http2;
-        server_name statellmarketing.com www.statellmarketing.com;
+        server_name ${DOMAIN} www.${DOMAIN};
 
         # SSL Certificates
-        ssl_certificate /etc/letsencrypt/live/statellmarketing.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/statellmarketing.com/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
 
         # SSL Settings
         ssl_protocols TLSv1.2 TLSv1.3;
@@ -161,8 +164,28 @@ http {
         add_header X-Content-Type-Options "nosniff" always;
         add_header X-XSS-Protection "1; mode=block" always;
 
+        # API routes - proxy to backend container
+        location /api/ {
+            proxy_pass http://backend_upstream/api/;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_read_timeout 300s;
+            proxy_connect_timeout 75s;
+        }
+
+        # Uploads - proxy to backend container
+        location /uploads/ {
+            proxy_pass http://backend_upstream/uploads/;
+            expires 30d;
+            add_header Cache-Control "public";
+        }
+
+        # Frontend - proxy to frontend container
         location / {
-            proxy_pass http://frontend;
+            proxy_pass http://frontend_upstream;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection 'upgrade';
@@ -171,22 +194,6 @@ http {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_cache_bypass $http_upgrade;
-        }
-
-        location /api/ {
-            proxy_pass http://backend/api/;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_read_timeout 300s;
-        }
-
-        location /uploads/ {
-            proxy_pass http://backend/uploads/;
-            expires 30d;
-            add_header Cache-Control "public";
         }
     }
 }
@@ -197,13 +204,24 @@ RUN cat > /docker-entrypoint.sh << 'ENTRY'
 #!/bin/bash
 set -e
 
+# Set default domain if not provided
+export DOMAIN="${DOMAIN:-localhost}"
+
+echo "Starting DryFruto Nginx Proxy..."
+echo "Domain: $DOMAIN"
+
 # Generate SSL certificates
 /generate-ssl.sh
+
+# Generate nginx config from template with environment variables
+envsubst '${DOMAIN}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+
+# Test nginx configuration
+nginx -t
 
 # Start nginx
 exec nginx -g 'daemon off;'
 ENTRY
-
 RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80 443
