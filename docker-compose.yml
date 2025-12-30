@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # MongoDB Database
   mongodb:
@@ -21,8 +19,8 @@ services:
   # Backend API
   backend:
     build:
-      context: .
-      dockerfile: docker/Dockerfile.backend
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.backend
     container_name: dryfruto-backend
     restart: unless-stopped
     environment:
@@ -44,8 +42,8 @@ services:
   # Frontend
   frontend:
     build:
-      context: .
-      dockerfile: docker/Dockerfile.frontend
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
       args:
         - REACT_APP_BACKEND_URL=https://statellmarketing.com
     container_name: dryfruto-frontend
