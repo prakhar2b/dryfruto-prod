@@ -21,11 +21,11 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50">
       {/* Top Bar */}
-      <div className="bg-emerald-700 text-white py-2">
+      <div className="bg-[#4a7a32] text-white py-2">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center text-sm">
           <div className="flex items-center gap-2">
             <Phone className="w-4 h-4" />
-            <a href={callLink} className="hover:text-emerald-200 transition-colors">
+            <a href={callLink} className="hover:text-[#C1E899] transition-colors">
               Call us: {siteSettings.phone}
             </a>
           </div>
@@ -36,7 +36,7 @@ const Header = () => {
       </div>
 
       {/* Main Header */}
-      <div className="bg-emerald-600 shadow-lg">
+      <div className="bg-[#5a8f3e] shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
@@ -44,21 +44,21 @@ const Header = () => {
               <img 
                 src={LOGO_URL} 
                 alt={siteSettings.businessName} 
-                className="h-14 w-14 rounded-full object-cover border-2 border-emerald-300"
+                className="h-14 w-14 rounded-full object-cover border-2 border-[#C1E899]"
               />
               <div className="hidden sm:block">
                 <h1 className="text-xl font-bold text-white">{siteSettings.businessName}</h1>
-                <p className="text-xs text-emerald-200 italic">{siteSettings.slogan}</p>
+                <p className="text-xs text-[#C1E899] italic">{siteSettings.slogan}</p>
               </div>
             </a>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
-              <a href="/" onClick={handleHomeClick} className="text-white hover:text-emerald-200 transition-colors font-medium">
+              <a href="/" onClick={handleHomeClick} className="text-white hover:text-[#C1E899] transition-colors font-medium">
                 Home
               </a>
               <div className="relative group">
-                <button className="text-white hover:text-emerald-200 transition-colors font-medium flex items-center gap-1">
+                <button className="text-white hover:text-[#C1E899] transition-colors font-medium flex items-center gap-1">
                   Shop
                   <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -69,23 +69,23 @@ const Header = () => {
                     <Link
                       key={cat.id}
                       to={`/products?category=${cat.slug}`}
-                      className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
+                      className="block px-4 py-2 text-gray-700 hover:bg-[#e3f1d5] hover:text-[#5a8f3e] transition-colors"
                     >
                       {cat.name}
                     </Link>
                   ))}
                 </div>
               </div>
-              <Link to="/bulk-order" className="text-white hover:text-emerald-200 transition-colors font-medium">
+              <Link to="/bulk-order" className="text-white hover:text-[#C1E899] transition-colors font-medium">
                 Bulk Order
               </Link>
-              <Link to="/career" className="text-white hover:text-emerald-200 transition-colors font-medium">
+              <Link to="/career" className="text-white hover:text-[#C1E899] transition-colors font-medium">
                 Career
               </Link>
-              <Link to="/about" className="text-white hover:text-emerald-200 transition-colors font-medium">
+              <Link to="/about" className="text-white hover:text-[#C1E899] transition-colors font-medium">
                 About Us
               </Link>
-              <a href="#contact" className="text-white hover:text-emerald-200 transition-colors font-medium">
+              <a href="#contact" className="text-white hover:text-[#C1E899] transition-colors font-medium">
                 Contact
               </a>
             </nav>
@@ -102,23 +102,23 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-emerald-700 border-t border-emerald-500">
+          <div className="lg:hidden bg-[#4a7a32] border-t border-[#5a8f3e]">
             <div className="max-w-7xl mx-auto px-4 py-4">
               <nav className="flex flex-col gap-3">
                 <a 
                   href="/" 
-                  className="text-white hover:text-emerald-200 py-2 transition-colors"
+                  className="text-white hover:text-[#C1E899] py-2 transition-colors"
                   onClick={handleHomeClick}
                 >
                   Home
                 </a>
-                <div className="border-t border-emerald-500 pt-2">
-                  <p className="text-emerald-300 text-sm font-medium mb-2">Shop</p>
+                <div className="border-t border-[#5a8f3e] pt-2">
+                  <p className="text-[#C1E899] text-sm font-medium mb-2">Shop</p>
                   {categories.map((cat) => (
                     <Link
                       key={cat.id}
                       to={`/products?category=${cat.slug}`}
-                      className="block text-white hover:text-emerald-200 py-1.5 pl-2 transition-colors"
+                      className="block text-white hover:text-[#C1E899] py-1.5 pl-2 transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {cat.name}
@@ -127,28 +127,28 @@ const Header = () => {
                 </div>
                 <Link 
                   to="/bulk-order" 
-                  className="text-white hover:text-emerald-200 py-2 border-t border-emerald-500 transition-colors"
+                  className="text-white hover:text-[#C1E899] py-2 border-t border-[#5a8f3e] transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Bulk Order
                 </Link>
                 <Link 
                   to="/career" 
-                  className="text-white hover:text-emerald-200 py-2 transition-colors"
+                  className="text-white hover:text-[#C1E899] py-2 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Career
                 </Link>
                 <Link 
                   to="/about" 
-                  className="text-white hover:text-emerald-200 py-2 border-t border-emerald-500 transition-colors"
+                  className="text-white hover:text-[#C1E899] py-2 border-t border-[#5a8f3e] transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   About Us
                 </Link>
                 <a 
                   href="#contact" 
-                  className="text-white hover:text-emerald-200 py-2 transition-colors"
+                  className="text-white hover:text-[#C1E899] py-2 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Contact
