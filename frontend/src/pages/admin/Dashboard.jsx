@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Image, Star, Gift, TrendingUp } from 'lucide-react';
+import { Package, Image, Star, Gift } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -40,20 +40,6 @@ const Dashboard = () => {
     }
   };
 
-  const seedData = async () => {
-    try {
-      setLoading(true);
-      await axios.post(`${API}/seed-data`);
-      await fetchStats();
-      alert('Data seeded successfully!');
-    } catch (error) {
-      console.error('Error seeding data:', error);
-      alert('Error seeding data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const statCards = [
     { name: 'Products', value: stats.products, icon: Package, color: 'bg-blue-500' },
     { name: 'Categories', value: stats.categories, icon: Image, color: 'bg-green-500' },
@@ -87,23 +73,6 @@ const Dashboard = () => {
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
-        <div className="flex flex-wrap gap-4">
-          <button
-            onClick={seedData}
-            disabled={loading}
-            className="flex items-center gap-2 bg-[#7CB342] hover:bg-[#689F38] text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
-          >
-            <TrendingUp className="w-5 h-5" />
-            Seed Initial Data
-          </button>
-        </div>
-        <p className="text-gray-500 text-sm mt-4">
-          Click "Seed Initial Data" to populate the database with default products, categories, and other content.
-        </p>
-      </div>
     </div>
   );
 };
