@@ -103,7 +103,7 @@
 #====================================================================================================
 
 
-user_problem_statement: "On bulk order page, make sure submit and whatsapp both options are on same line in desktop version. Also make these details configurable from admin panel."
+user_problem_statement: "Change the theme with primary color as #C1E899 and remove 'Latest Gift Boxes Collection' section from homepage"
 
 backend:
   - task: "Bulk Order Settings API - Store and retrieve bulkOrderProductTypes and bulkOrderBenefits"
@@ -122,17 +122,29 @@ backend:
         comment: "✅ BACKEND API TESTS PASSED: All 5 tests successful. GET /api/site-settings returns bulkOrderProductTypes (7 items) and bulkOrderBenefits (7 items) arrays. PUT /api/site-settings successfully updates both fields. Added test data: 'Spices' to product types and 'Free delivery above 50kg' to benefits. Changes persist correctly. API connectivity confirmed at https://dryfruto-shop.preview.emergentagent.com/api"
 
 frontend:
-  - task: "Bulk Order Page - Button alignment on desktop"
+  - task: "Theme Color Change - Update primary color to #C1E899"
     implemented: true
     working: true
-    file: "/app/frontend/src/pages/BulkOrder.jsx"
+    file: "/app/frontend/src/index.css"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
-      - working: true
+      - working: "NA"
         agent: "main"
-        comment: "Updated button container to use flexbox layout - buttons now appear side-by-side on desktop (md:flex md:flex-row) and stacked on mobile. Verified with screenshots."
+        comment: "Updated CSS variables in index.css with new color palette based on #C1E899. Updated Header.jsx, Footer.jsx, all home components (HeroSlider, Features, Newsletter, Testimonials, FeaturedProducts), ProductCard.jsx, ProductPage.jsx, ProductList.jsx, BulkOrder.jsx, and all admin panel files. Replaced all emerald color references with new hex codes: Primary: #8BC34A, Header: #7CB342, Footer: #689F38, Accent: #C1E899"
+
+  - task: "Remove Latest Gift Boxes Collection from homepage"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/Home.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Verified that GiftBoxes component is NOT imported or used in Home.jsx. The 'Latest Gift Boxes Collection' section was already not present on the homepage."
 
   - task: "Bulk Order Page - Dynamic Product Types from settings"
     implemented: true
