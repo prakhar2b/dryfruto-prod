@@ -1,17 +1,14 @@
-# Nginx Reverse Proxy with SSL and Admin Authentication
+# Nginx Reverse Proxy with SSL (HTTPS Only)
 FROM nginx:alpine
 
-# Install certbot, openssl, and apache2-utils for htpasswd
-RUN apk add --no-cache certbot certbot-nginx openssl bash curl apache2-utils
+# Install certbot and dependencies
+RUN apk add --no-cache certbot certbot-nginx openssl bash curl
 
 # Remove default config
 RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Create directories
-RUN mkdir -p /var/www/certbot /etc/letsencrypt /var/log/letsencrypt /etc/nginx/auth
-
-# Create default admin credentials (admin:admin123) - CHANGE IN PRODUCTION
-RUN htpasswd -bc /etc/nginx/auth/.htpasswd admin admin123
+RUN mkdir -p /var/www/certbot /etc/letsencrypt /var/log/letsencrypt
 
 # Create SSL generation script
 RUN cat > /generate-ssl.sh << 'SCRIPT'
@@ -141,27 +138,7 @@ http {
         add_header X-XSS-Protection "1; mode=block" always;
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
-        # ============================================
-        # ADMIN PANEL - Protected with Basic Auth
-        # ============================================
-        location /admin {
-            auth_basic "Admin Panel - Restricted Access";
-            auth_basic_user_file /etc/nginx/auth/.htpasswd;
-
-            proxy_pass http://frontend_upstream;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection 'upgrade';
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_cache_bypass $http_upgrade;
-        }
-
-        # ============================================
         # API Routes - Proxy to Backend
-        # ============================================
         location /api/ {
             proxy_pass http://backend_upstream/api/;
             proxy_http_version 1.1;
@@ -180,9 +157,7 @@ http {
             add_header Cache-Control "public";
         }
 
-        # ============================================
-        # Frontend - Public Access
-        # ============================================
+        # Frontend - All routes (including /admin)
         location / {
             proxy_pass http://frontend_upstream;
             proxy_http_version 1.1;
@@ -210,15 +185,8 @@ echo "=========================================="
 echo "DryFruto Nginx Proxy Starting..."
 echo "Domain: $DOMAIN"
 echo "HTTPS Only Mode: Enabled"
-echo "Admin Panel: Protected with Basic Auth"
+echo "Admin Panel: Protected by Application Auth"
 echo "=========================================="
-
-# Update admin credentials if provided via environment
-if [ -n "$ADMIN_USER" ] && [ -n "$ADMIN_PASS" ]; then
-    echo "Setting custom admin credentials..."
-    htpasswd -bc /etc/nginx/auth/.htpasswd "$ADMIN_USER" "$ADMIN_PASS"
-    echo "Admin credentials updated for user: $ADMIN_USER"
-fi
 
 # Generate SSL certificates
 /generate-ssl.sh
@@ -233,7 +201,7 @@ echo "=========================================="
 echo "Server ready!"
 echo "HTTP  -> Redirects to HTTPS"
 echo "HTTPS -> Serves application"
-echo "Admin -> /admin (requires authentication)"
+echo "Admin -> /admin/login (application login)"
 echo "=========================================="
 
 # Start nginx
