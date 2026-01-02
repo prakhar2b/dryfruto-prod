@@ -192,8 +192,8 @@ curl -I http://dryfruto.com:8081
 ## Step 8: Access Your Website
 
 Open in browser:
-- **Website:** https://dryfruto.com
-- **Admin Panel:** https://dryfruto.com/admin
+- **Website:** https://dryfruto.com:8082
+- **Admin Panel:** https://dryfruto.com:8082/admin
 
 ### Default Admin Credentials:
 - Username: `admin`
