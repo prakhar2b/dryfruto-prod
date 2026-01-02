@@ -106,23 +106,23 @@ dig www.dryfruto.com +short
 
 ## Step 4: Configure Server Firewall
 
-Make sure ports 80 and 443 are open on your server:
+Make sure ports 8081 and 8082 are open on your server:
 
 ```bash
 # Ubuntu/Debian with UFW
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
+sudo ufw allow 8081/tcp
+sudo ufw allow 8082/tcp
 sudo ufw status
 
 # CentOS/RHEL with firewalld
-sudo firewall-cmd --permanent --add-service=http
-sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --permanent --add-port=8081/tcp
+sudo firewall-cmd --permanent --add-port=8082/tcp
 sudo firewall-cmd --reload
 ```
 
 ### Hostinger VPS:
 - Go to VPS Dashboard → Firewall
-- Add rules for ports 80 and 443
+- Add rules for ports 8081 and 8082
 
 ---
 
