@@ -243,21 +243,15 @@ nginx -t
 
 echo "=========================================="
 echo "Starting Nginx..."
-echo "HTTP  (80)  -> Redirects to HTTPS"
-echo "HTTPS (443) -> Serves application"
+echo "HTTP  (8081) -> Redirects to HTTPS"
+echo "HTTPS (8082) -> Serves application"
 echo "=========================================="
 
-# Start nginx in background
-nginx
+# Start nginx in foreground, SSL cert will be obtained after startup
+# Using a background process to obtain SSL after nginx starts
+(sleep 10 && /obtain-ssl.sh) &
 
-# Wait a moment then try to obtain real SSL certificate
-echo "Attempting to obtain Let's Encrypt certificate in background..."
-(/obtain-ssl.sh &)
-
-# Keep nginx running in foreground
-wait
-
-# If nginx exits, restart it
+# Start nginx in foreground (keeps container running)
 exec nginx -g 'daemon off;'
 ENTRY
 RUN chmod +x /docker-entrypoint.sh
