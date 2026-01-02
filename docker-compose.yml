@@ -70,9 +70,6 @@ services:
       - DOMAIN=${DOMAIN:-localhost}
       - SSL_EMAIL=${SSL_EMAIL:-admin@example.com}
       - GENERATE_SSL=${GENERATE_SSL:-false}
-      # Admin panel credentials (change in production!)
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASS=${ADMIN_PASS:-admin123}
     volumes:
       - ssl_certs:/etc/letsencrypt
       - certbot_www:/var/www/certbot
