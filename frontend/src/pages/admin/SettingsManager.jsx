@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Phone, Mail, Facebook, Instagram, Twitter, Youtube, MessageCircle, Briefcase, Package, Plus, X, CheckCircle } from 'lucide-react';
+import { Save, Phone, Mail, Facebook, Instagram, Twitter, Youtube, MessageCircle, Briefcase, Package, Plus, X, CheckCircle, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import ImageUpload from '../../components/common/ImageUpload';
 import { API_BASE_URL } from '../../config/api';
+import { useAuth } from '../../context/AuthContext';
 
 const API = API_BASE_URL;
 
