@@ -265,10 +265,10 @@ docker compose restart
 | Item | Value |
 |------|-------|
 | Domain | dryfruto.com |
-| Website URL | https://dryfruto.com |
-| Admin URL | https://dryfruto.com/admin |
-| HTTP Port | 80 (redirects to HTTPS) |
-| HTTPS Port | 443 |
+| Website URL | https://dryfruto.com:8082 |
+| Admin URL | https://dryfruto.com:8082/admin |
+| HTTP Port | 8081 (redirects to HTTPS) |
+| HTTPS Port | 8082 |
 | SSL Provider | Let's Encrypt (auto-renewed) |
 
 ---
