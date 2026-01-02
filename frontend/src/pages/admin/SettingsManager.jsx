@@ -420,6 +420,155 @@ const SettingsManager = () => {
         </div>
       </div>
 
+      {/* Account Security Section */}
+      <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <span className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+            <Lock className="w-4 h-4 text-red-600" />
+          </span>
+          Account Security
+        </h2>
+
+        {user && (
+          <p className="text-sm text-gray-600 mb-4">
+            Logged in as: <strong>{user.username}</strong>
+          </p>
+        )}
+
+        {!showPasswordSection ? (
+          <button
+            onClick={() => setShowPasswordSection(true)}
+            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors"
+          >
+            <Lock className="w-4 h-4" />
+            Change Password
+          </button>
+        ) : (
+          <div className="space-y-4 max-w-md">
+            {passwordMessage && (
+              <div className={`flex items-center gap-2 p-3 rounded-lg ${
+                passwordMessage.type === 'success' 
+                  ? 'bg-green-50 border border-green-200 text-green-700' 
+                  : 'bg-red-50 border border-red-200 text-red-700'
+              }`}>
+                {passwordMessage.type === 'success' ? (
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                ) : (
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                )}
+                <span className="text-sm">{passwordMessage.text}</span>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+              <div className="relative">
+                <input
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+                  placeholder="Enter current password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+                  placeholder="Enter new password (min 6 characters)"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
+                placeholder="Confirm new password"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={async () => {
+                  if (!currentPassword || !newPassword || !confirmPassword) {
+                    setPasswordMessage({ type: 'error', text: 'Please fill in all fields' });
+                    return;
+                  }
+                  if (newPassword !== confirmPassword) {
+                    setPasswordMessage({ type: 'error', text: 'New passwords do not match' });
+                    return;
+                  }
+                  if (newPassword.length < 6) {
+                    setPasswordMessage({ type: 'error', text: 'New password must be at least 6 characters' });
+                    return;
+                  }
+
+                  setPasswordChanging(true);
+                  setPasswordMessage(null);
+                  
+                  const result = await changePassword(currentPassword, newPassword);
+                  
+                  if (result.success) {
+                    setPasswordMessage({ type: 'success', text: 'Password changed successfully!' });
+                    setCurrentPassword('');
+                    setNewPassword('');
+                    setConfirmPassword('');
+                    setTimeout(() => {
+                      setShowPasswordSection(false);
+                      setPasswordMessage(null);
+                    }, 2000);
+                  } else {
+                    setPasswordMessage({ type: 'error', text: result.message });
+                  }
+                  
+                  setPasswordChanging(false);
+                }}
+                disabled={passwordChanging}
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+              >
+                {passwordChanging ? 'Changing...' : 'Update Password'}
+              </button>
+              <button
+                onClick={() => {
+                  setShowPasswordSection(false);
+                  setCurrentPassword('');
+                  setNewPassword('');
+                  setConfirmPassword('');
+                  setPasswordMessage(null);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="flex justify-end">
         <button
           onClick={handleSave}
