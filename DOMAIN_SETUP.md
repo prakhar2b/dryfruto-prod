@@ -180,11 +180,11 @@ strict-transport-security: max-age=31536000; includeSubDomains; preload
 
 ```bash
 # Test redirect (should show 301)
-curl -I http://dryfruto.com
+curl -I http://dryfruto.com:8081
 
 # Expected response:
 # HTTP/1.1 301 Moved Permanently
-# Location: https://dryfruto.com/
+# Location: https://dryfruto.com:8082/
 ```
 
 ---
