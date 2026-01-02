@@ -1,4 +1,4 @@
-# Backend Dockerfile - Python FastAPI
+# DryFruto Backend - Production Image
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -18,9 +18,14 @@ COPY . ./
 # Create uploads directory
 RUN mkdir -p /app/uploads
 
+# Set environment defaults
+ENV PYTHONUNBUFFERED=1
+ENV MONGO_URL=mongodb://mongodb:27017
+ENV DB_NAME=dryfruto
+
 EXPOSE 8001
 
-# Health check - verifies API is responding
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:8001/api/health || exit 1
 

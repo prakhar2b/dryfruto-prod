@@ -1,8 +1,8 @@
-# Nginx Reverse Proxy with SSL (HTTPS Only)
+# Nginx Reverse Proxy with Built-in SSL for dryfruto.com
 FROM nginx:alpine
 
 # Install certbot and dependencies
-RUN apk add --no-cache certbot certbot-nginx openssl bash curl
+RUN apk add --no-cache certbot certbot-nginx openssl bash curl gettext
 
 # Remove default config
 RUN rm -f /etc/nginx/conf.d/default.conf
@@ -13,49 +13,82 @@ RUN mkdir -p /var/www/certbot /etc/letsencrypt /var/log/letsencrypt
 # Create SSL generation script
 RUN cat > /generate-ssl.sh << 'SCRIPT'
 #!/bin/bash
-DOMAIN="${DOMAIN:-localhost}"
-EMAIL="${SSL_EMAIL:-admin@example.com}"
+set -e
+
+DOMAIN="${DOMAIN:-dryfruto.com}"
+EMAIL="${SSL_EMAIL:-admin@dryfruto.com}"
 
 SSL_DIR="/etc/letsencrypt/live/$DOMAIN"
 SSL_CERT="$SSL_DIR/fullchain.pem"
 SSL_KEY="$SSL_DIR/privkey.pem"
 
-# Check if certificates already exist
+echo "============================================"
+echo "SSL Certificate Setup for $DOMAIN"
+echo "============================================"
+
+# Check if valid certificates already exist
 if [ -f "$SSL_CERT" ] && [ -f "$SSL_KEY" ]; then
-    echo "SSL certificates already exist, skipping generation"
-    exit 0
+    # Check if certificate is still valid (not expiring in next 30 days)
+    if openssl x509 -checkend 2592000 -noout -in "$SSL_CERT" 2>/dev/null; then
+        echo "Valid SSL certificates exist, skipping generation"
+        exit 0
+    fi
+    echo "Certificates expiring soon, will renew..."
 fi
 
 mkdir -p "$SSL_DIR"
 
-# If GENERATE_SSL is not set or is false, use self-signed certificates
-if [ "$GENERATE_SSL" != "true" ]; then
-    echo "Creating self-signed certificate for $DOMAIN..."
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout "$SSL_KEY" \
-        -out "$SSL_CERT" \
-        -subj "/CN=$DOMAIN"
-    echo "Self-signed certificate created"
-    exit 0
-fi
+# First, create self-signed cert so nginx can start
+echo "Creating temporary self-signed certificate..."
+openssl req -x509 -nodes -days 1 -newkey rsa:2048 \
+    -keyout "$SSL_KEY" \
+    -out "$SSL_CERT" \
+    -subj "/CN=$DOMAIN"
 
-# Try to get Let's Encrypt certificate
-echo "Attempting Let's Encrypt certificate for $DOMAIN..."
-certbot certonly --standalone \
+echo "Temporary certificate created"
+echo "Let's Encrypt certificate will be obtained after nginx starts"
+SCRIPT
+RUN chmod +x /generate-ssl.sh
+
+# Create Let's Encrypt renewal script
+RUN cat > /obtain-ssl.sh << 'SCRIPT'
+#!/bin/bash
+set -e
+
+DOMAIN="${DOMAIN:-dryfruto.com}"
+EMAIL="${SSL_EMAIL:-admin@dryfruto.com}"
+
+SSL_DIR="/etc/letsencrypt/live/$DOMAIN"
+SSL_CERT="$SSL_DIR/fullchain.pem"
+SSL_KEY="$SSL_DIR/privkey.pem"
+
+echo "Attempting to obtain Let's Encrypt certificate for $DOMAIN..."
+
+# Wait for nginx to be ready
+sleep 5
+
+# Try to get Let's Encrypt certificate using webroot
+certbot certonly --webroot \
+    --webroot-path=/var/www/certbot \
     --non-interactive \
     --agree-tos \
     --email "$EMAIL" \
     --domains "$DOMAIN" \
-    || {
-        echo "Let's Encrypt failed, creating self-signed certificate..."
-        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-            -keyout "$SSL_KEY" \
-            -out "$SSL_CERT" \
-            -subj "/CN=$DOMAIN"
-        echo "Self-signed certificate created"
+    --domains "www.$DOMAIN" \
+    --force-renewal \
+    && {
+        echo "Let's Encrypt certificate obtained successfully!"
+        # Reload nginx to use new certificate
+        nginx -s reload
+    } || {
+        echo "Let's Encrypt failed. Using self-signed certificate."
+        echo "Make sure:"
+        echo "  1. Domain $DOMAIN points to this server"
+        echo "  2. Ports 80 and 443 are open"
+        echo "  3. No firewall blocking HTTP validation"
     }
 SCRIPT
-RUN chmod +x /generate-ssl.sh
+RUN chmod +x /obtain-ssl.sh
 
 # Create nginx configuration template
 RUN cat > /etc/nginx/nginx.conf.template << 'EOF'
@@ -98,18 +131,19 @@ http {
         server backend:8001;
     }
 
-    # HTTP Server - Redirect ALL traffic to HTTPS
+    # HTTP Server - Redirect ALL to HTTPS
     server {
         listen 80;
         listen [::]:80;
-        server_name ${DOMAIN} www.${DOMAIN} localhost _;
+        server_name DOMAIN_PLACEHOLDER www.DOMAIN_PLACEHOLDER;
 
-        # ACME challenge for Let's Encrypt (must stay on HTTP)
+        # ACME challenge for Let's Encrypt
         location /.well-known/acme-challenge/ {
             root /var/www/certbot;
+            allow all;
         }
 
-        # Redirect all other HTTP traffic to HTTPS
+        # Redirect everything else to HTTPS
         location / {
             return 301 https://$host$request_uri;
         }
@@ -119,24 +153,27 @@ http {
     server {
         listen 443 ssl http2;
         listen [::]:443 ssl http2;
-        server_name ${DOMAIN} www.${DOMAIN} localhost;
+        server_name DOMAIN_PLACEHOLDER www.DOMAIN_PLACEHOLDER;
 
         # SSL Certificates
-        ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/DOMAIN_PLACEHOLDER/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/DOMAIN_PLACEHOLDER/privkey.pem;
 
-        # SSL Settings
+        # Modern SSL Configuration
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_prefer_server_ciphers off;
         ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
         ssl_session_timeout 1d;
         ssl_session_cache shared:SSL:50m;
+        ssl_stapling on;
+        ssl_stapling_verify on;
 
         # Security Headers
         add_header X-Frame-Options "SAMEORIGIN" always;
         add_header X-Content-Type-Options "nosniff" always;
         add_header X-XSS-Protection "1; mode=block" always;
-        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
         # API Routes - Proxy to Backend
         location /api/ {
@@ -157,7 +194,7 @@ http {
             add_header Cache-Control "public";
         }
 
-        # Frontend - All routes (including /admin)
+        # Frontend - All routes
         location / {
             proxy_pass http://frontend_upstream;
             proxy_http_version 1.1;
@@ -178,36 +215,52 @@ RUN cat > /docker-entrypoint.sh << 'ENTRY'
 #!/bin/bash
 set -e
 
-# Set default domain if not provided
-export DOMAIN="${DOMAIN:-localhost}"
+# Set domain from environment or default
+export DOMAIN="${DOMAIN:-dryfruto.com}"
 
 echo "=========================================="
-echo "DryFruto Nginx Proxy Starting..."
+echo "DryFruto Production Server"
+echo "=========================================="
 echo "Domain: $DOMAIN"
-echo "HTTPS Only Mode: Enabled"
-echo "Admin Panel: Protected by Application Auth"
+echo "SSL Email: ${SSL_EMAIL:-admin@dryfruto.com}"
 echo "=========================================="
 
-# Generate SSL certificates
+# Generate initial SSL certificate (self-signed)
 /generate-ssl.sh
 
-# Generate nginx config from template with environment variables
-envsubst '${DOMAIN}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+# Generate nginx config with domain substitution
+sed "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 # Test nginx configuration
 nginx -t
 
 echo "=========================================="
-echo "Server ready!"
-echo "HTTP  -> Redirects to HTTPS"
-echo "HTTPS -> Serves application"
-echo "Admin -> /admin/login (application login)"
+echo "Starting Nginx..."
+echo "HTTP  (80)  -> Redirects to HTTPS"
+echo "HTTPS (443) -> Serves application"
 echo "=========================================="
 
-# Start nginx
+# Start nginx in background
+nginx
+
+# Wait a moment then try to obtain real SSL certificate
+echo "Attempting to obtain Let's Encrypt certificate in background..."
+(/obtain-ssl.sh &)
+
+# Keep nginx running in foreground
+wait
+
+# If nginx exits, restart it
 exec nginx -g 'daemon off;'
 ENTRY
 RUN chmod +x /docker-entrypoint.sh
+
+# Create certificate renewal cron job
+RUN cat > /etc/periodic/daily/certbot-renew << 'CRON'
+#!/bin/sh
+certbot renew --quiet --webroot --webroot-path=/var/www/certbot && nginx -s reload
+CRON
+RUN chmod +x /etc/periodic/daily/certbot-renew
 
 EXPOSE 80 443
 

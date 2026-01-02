@@ -1,4 +1,4 @@
-# Frontend Dockerfile - React Build with Runtime Config
+# DryFruto Frontend - Production Image
 FROM node:14-alpine AS builder
 
 WORKDIR /app
@@ -6,26 +6,25 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies using npm
+# Install dependencies
 RUN npm install
 
 # Copy source code
 COPY . ./
 
-# Build with empty backend URL - will use relative path /api
+# Build with empty backend URL (uses relative /api path)
 ENV REACT_APP_BACKEND_URL=""
 
-# Build the app
+# Build the production app
 RUN npm run build
 
-# Production stage with nginx
+# Production stage
 FROM nginx:alpine
 
 # Copy built files
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# Create nginx config for SPA routing
-# API calls go to /api/* which nginx will proxy to backend
+# Nginx config for SPA
 RUN cat > /etc/nginx/conf.d/default.conf << 'EOF'
 server {
     listen 80;

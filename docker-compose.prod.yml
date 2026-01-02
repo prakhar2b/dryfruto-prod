@@ -1,5 +1,5 @@
-# DryFruto Production Docker Compose
-# Uses pre-built images for faster deployment
+# DryFruto Production - Uses Pre-built Images Only
+# Run: docker compose -f docker-compose.prod.yml up -d
 
 services:
   # MongoDB Database
@@ -20,19 +20,16 @@ services:
       retries: 10
       start_period: 30s
 
-  # Backend API (Pre-built image)
+  # Backend API
   backend:
     image: dryfruto/backend:latest
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
     container_name: dryfruto_api
     restart: unless-stopped
     environment:
       - MONGO_URL=mongodb://mongodb:27017
       - DB_NAME=dryfruto
       - CORS_ORIGINS=*
-      - JWT_SECRET=${JWT_SECRET:-change_this_to_a_secure_secret_key_in_production}
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
       - uploads_data:/app/uploads
     depends_on:
@@ -47,12 +44,9 @@ services:
       retries: 5
       start_period: 30s
 
-  # Frontend (Pre-built image)
+  # Frontend
   frontend:
     image: dryfruto/frontend:latest
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     container_name: dryfruto_web
     restart: unless-stopped
     depends_on:
@@ -61,12 +55,9 @@ services:
     networks:
       - app-network
 
-  # Nginx Reverse Proxy with SSL (Pre-built image)
+  # Nginx with SSL
   nginx:
     image: dryfruto/nginx:latest
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
     container_name: dryfruto_proxy
     restart: unless-stopped
     ports:
