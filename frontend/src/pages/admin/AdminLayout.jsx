@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useLocation, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Image, Package, Settings, Menu, X, ChevronRight, Home, FileText, Database } from 'lucide-react';
+import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Image, Package, Settings, Menu, X, Home, FileText, Database, LogOut, User } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const menuItems = [
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
@@ -18,6 +21,11 @@ const AdminLayout = () => {
   const isActive = (path) => {
     if (path === '/admin') return location.pathname === '/admin';
     return location.pathname.startsWith(path);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin/login');
   };
 
   return (
@@ -59,7 +67,16 @@ const AdminLayout = () => {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-[#33691E]">
+        <div className="p-4 border-t border-[#33691E] space-y-2">
+          {/* User Info */}
+          {sidebarOpen && user && (
+            <div className="flex items-center gap-3 px-4 py-2 text-[#C1E899]">
+              <User className="w-4 h-4" />
+              <span className="text-sm truncate">{user.username}</span>
+            </div>
+          )}
+          
+          {/* Visit Website */}
           <a
             href="/"
             target="_blank"
@@ -69,6 +86,15 @@ const AdminLayout = () => {
             <Home className="w-5 h-5" />
             {sidebarOpen && <span>Visit Website</span>}
           </a>
+          
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-300 hover:bg-red-900/30 transition-colors"
+          >
+            <LogOut className="w-5 h-5" />
+            {sidebarOpen && <span>Logout</span>}
+          </button>
         </div>
       </aside>
 
