@@ -59,9 +59,8 @@ services:
     networks:
       - app-network
 
-  # Nginx Reverse Proxy with SSL (Pre-built image)
+  # Nginx Reverse Proxy with SSL
   nginx:
-    image: dryfruto/nginx:latest
     build:
       context: ./nginx
       dockerfile: Dockerfile
