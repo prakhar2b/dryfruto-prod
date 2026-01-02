@@ -424,6 +424,97 @@ async def health_check():
     except Exception as e:
         return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
 
+# ============== AUTH ROUTES ==============
+
+@api_router.post("/auth/login", response_model=LoginResponse)
+async def login(request: LoginRequest):
+    """Admin login endpoint"""
+    # Find admin user
+    admin = await db.admin_users.find_one({"username": request.username}, {"_id": 0})
+    
+    # If no admin exists, create default admin on first login attempt
+    if not admin:
+        admin_count = await db.admin_users.count_documents({})
+        if admin_count == 0 and request.username == "admin" and request.password == "admin123":
+            # Create default admin
+            default_admin = {
+                "id": str(uuid.uuid4()),
+                "username": "admin",
+                "password_hash": hash_password("admin123"),
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "last_login": None
+            }
+            await db.admin_users.insert_one(default_admin)
+            admin = default_admin
+    
+    if not admin:
+        return LoginResponse(success=False, message="Invalid username or password")
+    
+    # Verify password
+    if admin["password_hash"] != hash_password(request.password):
+        return LoginResponse(success=False, message="Invalid username or password")
+    
+    # Update last login
+    await db.admin_users.update_one(
+        {"id": admin["id"]},
+        {"$set": {"last_login": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    # Generate JWT token
+    token = create_jwt_token(admin["id"], admin["username"])
+    
+    return LoginResponse(
+        success=True,
+        token=token,
+        username=admin["username"],
+        message="Login successful"
+    )
+
+@api_router.get("/auth/verify")
+async def verify_token(current_user: dict = Depends(get_current_user)):
+    """Verify if current token is valid"""
+    return {
+        "valid": True,
+        "username": current_user["username"],
+        "user_id": current_user["user_id"]
+    }
+
+@api_router.post("/auth/change-password")
+async def change_password(request: ChangePasswordRequest, current_user: dict = Depends(get_current_user)):
+    """Change admin password"""
+    # Get current admin
+    admin = await db.admin_users.find_one({"id": current_user["user_id"]}, {"_id": 0})
+    
+    if not admin:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify current password
+    if admin["password_hash"] != hash_password(request.current_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    
+    # Validate new password
+    if len(request.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
+    
+    if request.new_password == request.current_password:
+        raise HTTPException(status_code=400, detail="New password must be different from current password")
+    
+    # Update password
+    await db.admin_users.update_one(
+        {"id": current_user["user_id"]},
+        {"$set": {"password_hash": hash_password(request.new_password)}}
+    )
+    
+    return {"success": True, "message": "Password changed successfully"}
+
+@api_router.get("/auth/me")
+async def get_current_admin(current_user: dict = Depends(get_current_user)):
+    """Get current admin info"""
+    admin = await db.admin_users.find_one({"id": current_user["user_id"]}, {"_id": 0, "password_hash": 0})
+    if not admin:
+        raise HTTPException(status_code=404, detail="User not found")
+    return admin
+
 # ----- Status Check Routes -----
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
