@@ -135,18 +135,6 @@ const AdminLogin = () => {
               )}
             </button>
           </form>
-
-          {/* Default Credentials Info */}
-          <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
-            <p className="text-sm text-amber-800">
-              <strong>Default credentials:</strong><br />
-              Username: <code className="bg-amber-100 px-1 rounded">admin</code><br />
-              Password: <code className="bg-amber-100 px-1 rounded">admin123</code>
-            </p>
-            <p className="text-xs text-amber-700 mt-2">
-              ⚠️ Please change the password after first login
-            </p>
-          </div>
         </div>
 
         {/* Back to website */}
