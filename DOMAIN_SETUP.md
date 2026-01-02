@@ -238,12 +238,12 @@ docker compose exec nginx nginx -s reload
 
 ```bash
 # Check if ports are listening
-netstat -tlnp | grep -E ':(80|443)'
+netstat -tlnp | grep -E ':(8081|8082)'
 
 # Check firewall
 sudo ufw status
 # or
-sudo iptables -L -n | grep -E '(80|443)'
+sudo iptables -L -n | grep -E '(8081|8082)'
 ```
 
 ### Container not starting
