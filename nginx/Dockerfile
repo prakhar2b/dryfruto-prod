@@ -131,25 +131,30 @@ http {
         server backend:8001;
     }
 
-    # HTTP Server - Redirect ALL to HTTPS
+    # ==============================================
+    # HTTP Server (Port 80) - REDIRECT ONLY
+    # All traffic is permanently redirected to HTTPS
+    # ==============================================
     server {
-        listen 80;
-        listen [::]:80;
-        server_name DOMAIN_PLACEHOLDER www.DOMAIN_PLACEHOLDER;
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        server_name _;
 
-        # ACME challenge for Let's Encrypt
+        # ACME challenge for Let's Encrypt certificate validation
         location /.well-known/acme-challenge/ {
             root /var/www/certbot;
             allow all;
         }
 
-        # Redirect everything else to HTTPS
+        # 301 Permanent Redirect ALL other traffic to HTTPS
         location / {
             return 301 https://$host$request_uri;
         }
     }
 
-    # HTTPS Server - Main Application
+    # ==============================================
+    # HTTPS Server (Port 443) - Main Application
+    # ==============================================
     server {
         listen 443 ssl http2;
         listen [::]:443 ssl http2;
