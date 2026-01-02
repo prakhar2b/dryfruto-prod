@@ -61,7 +61,6 @@ services:
     container_name: dryfruto_proxy
     restart: unless-stopped
     ports:
-      - "80:80"
       - "443:443"
     environment:
       - DOMAIN=dryfruto.com
